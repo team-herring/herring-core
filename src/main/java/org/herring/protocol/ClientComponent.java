@@ -27,6 +27,8 @@ public class ClientComponent implements NetworkComponent {
         this.host = host;
         this.port = port;
         this.handler = new RawPacketHandler(handler);
+
+        configureNetty();
     }
 
     public void configureNetty() {
