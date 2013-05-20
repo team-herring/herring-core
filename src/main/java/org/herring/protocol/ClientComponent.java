@@ -57,8 +57,6 @@ public class ClientComponent implements NetworkComponent {
     }
 
     public void destroy() {
-        stop();
-
         if (!group.isShutdown())
             group.shutdown();
 

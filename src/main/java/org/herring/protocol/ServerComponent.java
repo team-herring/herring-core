@@ -60,8 +60,6 @@ public class ServerComponent implements NetworkComponent {
     }
 
     public void destroy() {
-        stop();
-
         if (!bossGroup.isShutdown())
             bossGroup.shutdown();
 
