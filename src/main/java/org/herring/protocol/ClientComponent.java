@@ -3,8 +3,9 @@ package org.herring.protocol;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.herring.protocol.codec.HerringCodec;
+import org.herring.protocol.handler.MessageHandler;
 
 /**
  * Herring Protocol Library를 사용하는 Client Network Component 클래스.
@@ -16,55 +17,54 @@ public class ClientComponent implements NetworkComponent {
 
     private final String host;
     private final int port;
-    private final RawPacketHandler handler;
+
+    private final MessageHandler msgHandler;
+    private final HerringCodec codec;
 
     private EventLoopGroup group;
-    private ChannelFuture channelFuture;
+    private Channel nettyChannel;
 
     private Bootstrap bootstrap;
 
-    public ClientComponent(String host, int port, DataHandler handler) {
+    public ClientComponent(String host, int port, HerringCodec codec, MessageHandler msgHandler) {
         this.host = host;
         this.port = port;
-        this.handler = new RawPacketHandler(handler);
+        this.msgHandler = msgHandler;
+        this.codec = codec;
 
-        configureNetty();
+        initialize();
     }
 
-    public void configureNetty() {
+    @Override
+    public void initialize() {
         bootstrap = new Bootstrap();
 
         group = new NioEventLoopGroup();
 
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG, 100)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(handler);
-                    }
-                });
+                .handler(new ComponentInitializer(codec, msgHandler));
     }
 
-    public void start() {
-        // TODO: 추후 이 부분도 비동기 처리가 되도록 구조 변경 필요.
-        channelFuture = bootstrap.connect(host, port).syncUninterruptibly();
+    @Override
+    public void start() throws Exception {
+        nettyChannel = bootstrap.connect(host, port).syncUninterruptibly().channel();
     }
 
+    @Override
     public void stop() {
-        // TODO: 추후 이 부분도 비동기 처리가 되도록 구조 변경 필요.
-        if (channelFuture.channel().isOpen())
-            channelFuture.channel().closeFuture().syncUninterruptibly();
+        nettyChannel.close().addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                future.channel().eventLoop().shutdownGracefully();
+                group.shutdownGracefully();
+
+                msgHandler.channelClosed(future.channel());
+            }
+        });
     }
 
-    public void destroy() {
-        if (!group.isShutdown())
-            group.shutdown();
-
-        if (bootstrap != null) {
-            bootstrap.shutdown();
-            bootstrap = null;
-        }
+    public Channel getChannel() {
+        return nettyChannel;
     }
 }

@@ -1,17 +1,17 @@
-package org.herring.protocol;
+package org.herring.protocol.codec;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
- * Java Serialization 기능을 이용해 일반 Object의 전송, 수신을 처리하는 Handler 클래스. 일반적인 Object Message를 전송할 때 사용한다.
- *
  * @author Chiwan Park
- * @since 0.1
+ * @since 0.2
  */
-public abstract class SerializableDataHandler implements DataHandler<Object> {
-
+public class SerializableCodec implements HerringCodec {
     @Override
-    public byte[] encode(Object data) throws IOException {
+    public byte[] encode(Object data) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 
@@ -21,7 +21,7 @@ public abstract class SerializableDataHandler implements DataHandler<Object> {
     }
 
     @Override
-    public Object decode(byte[] packet) throws IOException, ClassNotFoundException {
+    public Object decode(byte[] packet) throws Exception {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(packet);
         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 
