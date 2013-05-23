@@ -1,8 +1,7 @@
 package org.herring.protocol.tests;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import org.herring.protocol.ClientComponent;
+import org.herring.protocol.NetworkContext;
 import org.herring.protocol.codec.HerringCodec;
 import org.herring.protocol.codec.SerializableCodec;
 import org.herring.protocol.handler.MessageHandler;
@@ -27,23 +26,28 @@ public class EchoClientSample {
 
         MessageHandler handler = new MessageHandler() {
             @Override
-            public void messageArrived(ChannelHandlerContext context, Object data) throws Exception {
+            public void messageArrived(NetworkContext context, Object data) throws Exception {
                 System.out.println((String) data);
             }
 
             @Override
-            public void channelReady(ChannelHandlerContext context) throws Exception {
+            public void channelReady(NetworkContext context) throws Exception {
                 System.out.println("연결 준비");
             }
 
             @Override
-            public void channelBroken(ChannelHandlerContext context) throws Exception {
+            public void channelInactive(NetworkContext context) throws Exception {
                 System.out.println("연결 끊어짐");
             }
 
             @Override
-            public void channelClosed(Channel channel) throws Exception {
+            public void channelClosed(NetworkContext context) throws Exception {
                 System.out.println("연결 종료됨");
+            }
+
+            @Override
+            public void networkStopped() throws Exception {
+                System.out.println("네트워크 종료됨");
             }
         };
 

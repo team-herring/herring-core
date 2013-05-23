@@ -55,11 +55,10 @@ public class ServerComponent implements NetworkComponent {
         nettyChannel.close().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
-                future.channel().eventLoop().shutdownGracefully();
                 bossGroup.shutdownGracefully();
                 workerGroup.shutdownGracefully();
 
-                msgHandler.channelClosed(future.channel());
+                msgHandler.networkStopped();
             }
         });
     }

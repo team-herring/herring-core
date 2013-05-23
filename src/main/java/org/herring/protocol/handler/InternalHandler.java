@@ -2,6 +2,7 @@ package org.herring.protocol.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import org.herring.protocol.NetworkContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,14 +27,14 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         logger.log(Level.INFO, "Channel Active");
 
-        handler.channelReady(ctx);
+        handler.channelReady(new NetworkContext(ctx.channel()));
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         logger.log(Level.INFO, "Channel Inactive");
 
-        handler.channelBroken(ctx);
+        handler.channelInactive(new NetworkContext(ctx.channel()));
     }
 
     @Override
@@ -47,6 +48,6 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
     public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.log(Level.INFO, "Message Received");
 
-        handler.messageArrived(ctx, msg);
+        handler.messageArrived(new NetworkContext(ctx.channel()), msg);
     }
 }

@@ -59,7 +59,7 @@ public class ClientComponent implements NetworkComponent {
                 future.channel().eventLoop().shutdownGracefully();
                 group.shutdownGracefully();
 
-                msgHandler.channelClosed(future.channel());
+                msgHandler.channelClosed(new NetworkContext(future.channel()));
             }
         });
     }

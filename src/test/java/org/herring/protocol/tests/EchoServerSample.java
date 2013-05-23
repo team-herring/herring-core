@@ -1,13 +1,13 @@
 package org.herring.protocol.tests;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
+import org.herring.protocol.NetworkContext;
 import org.herring.protocol.ServerComponent;
 import org.herring.protocol.codec.HerringCodec;
 import org.herring.protocol.codec.SerializableCodec;
 import org.herring.protocol.handler.MessageHandler;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * Herring Protocol Framework를 활용한 Echo Server 예제이다. Herring Client에서 전송된 내용을 그대로 돌려보내준다.
@@ -28,38 +28,39 @@ public class EchoServerSample {
 
         MessageHandler handler = new MessageHandler() {
             @Override
-            public void messageArrived(ChannelHandlerContext context, Object data) throws Exception {
+            public void messageArrived(NetworkContext context, Object data) throws Exception {
                 if ("bye".equalsIgnoreCase((String) data)) {
-                    context.close().addListener(new ChannelFutureListener() {
-                        @Override
-                        public void operationComplete(ChannelFuture future) throws Exception {
-                            future.channel().eventLoop().shutdownGracefully();
-                        }
-                    });
+                    context.close(this);
                     return;
                 }
 
-                context.write(data);
+                context.sendObject(data, this);
             }
 
             @Override
-            public void channelReady(ChannelHandlerContext context) throws Exception {
-                System.out.println("연결 준비: " + context.channel().remoteAddress());
+            public void channelReady(NetworkContext context) throws Exception {
+                System.out.println("연결 준비: " + context.getRemoteAddress());
             }
 
             @Override
-            public void channelBroken(ChannelHandlerContext context) throws Exception {
-                System.out.println("연결 끊어짐: " + context.channel().remoteAddress());
+            public void channelInactive(NetworkContext context) throws Exception {
+                System.out.println("연결 끊어짐: " + context.getRemoteAddress());
             }
 
             @Override
-            public void channelClosed(Channel channel) throws Exception {
-                System.out.println("연결 종료됨: " + channel.remoteAddress());
+            public void channelClosed(NetworkContext context) throws Exception {
+                System.out.println("연결 종료됨: " + context.getRemoteAddress());
             }
         };
 
-        serverInstance.serverComponent = new ServerComponent(port, codec, handler);
+        try {
+            serverInstance.serverComponent = new ServerComponent(port, codec, handler);
+            serverInstance.serverComponent.start();
 
-        serverInstance.serverComponent.start();
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            while (!"bye".equalsIgnoreCase(in.readLine())) ;
+        } finally {
+            serverInstance.serverComponent.stop();
+        }
     }
 }
