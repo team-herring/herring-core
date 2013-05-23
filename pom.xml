@@ -27,4 +27,15 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>maven.chiwanpark.com</id>
+            <url>http://maven.chiwanpark.com/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven.chiwanpark.com</id>
+            <url>http://maven.chiwanpark.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
