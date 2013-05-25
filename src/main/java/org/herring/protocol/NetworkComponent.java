@@ -21,4 +21,11 @@ public interface NetworkComponent {
      * 작동중인 네트워크를 중단하는 메서드다. 이 메서드를 호출하면 수행중인 모든 네트워크 채널을 닫고 종료 상태로 돌아간다. 이 메서드는 네트워크의 종료를 기다리지 않는다.
      */
     public void stop();
+
+    /**
+     * 현재 작동중인 상태인지 확인하는 메서드다.
+     *
+     * @return 현재 Component가 작동중이면 true, 아니면 false
+     */
+    public boolean isActive();
 }

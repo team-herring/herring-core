@@ -57,6 +57,9 @@ public class EchoServerSample {
             serverInstance.serverComponent = new ServerComponent(port, codec, handler);
             serverInstance.serverComponent.start();
 
+            if (!serverInstance.serverComponent.isActive())
+                throw new RuntimeException();
+
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             while (!"bye".equalsIgnoreCase(in.readLine())) ;
         } finally {

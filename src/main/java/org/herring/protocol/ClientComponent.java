@@ -26,11 +26,14 @@ public class ClientComponent implements NetworkComponent {
 
     private Bootstrap bootstrap;
 
+    private boolean active;
+
     public ClientComponent(String host, int port, HerringCodec codec, MessageHandler msgHandler) {
         this.host = host;
         this.port = port;
         this.msgHandler = msgHandler;
         this.codec = codec;
+        this.active = false;
 
         initialize();
     }
@@ -49,6 +52,8 @@ public class ClientComponent implements NetworkComponent {
     @Override
     public void start() throws Exception {
         nettyChannel = bootstrap.connect(host, port).syncUninterruptibly().channel();
+
+        active = true;
     }
 
     @Override
@@ -60,8 +65,15 @@ public class ClientComponent implements NetworkComponent {
                 group.shutdownGracefully();
 
                 msgHandler.channelClosed(new NetworkContext(future.channel()));
+
+                active = false;
             }
         });
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 
     public Channel getChannel() {

@@ -24,10 +24,13 @@ public class ServerComponent implements NetworkComponent {
 
     private Channel nettyChannel;
 
+    private boolean active;
+
     public ServerComponent(int port, HerringCodec codec, MessageHandler msgHandler) {
         this.port = port;
         this.msgHandler = msgHandler;
         this.codec = codec;
+        this.active = false;
 
         initialize();
     }
@@ -48,6 +51,8 @@ public class ServerComponent implements NetworkComponent {
     @Override
     public void start() throws Exception {
         nettyChannel = bootstrap.bind(port).syncUninterruptibly().channel();
+
+        active = true;
     }
 
     @Override
@@ -59,7 +64,14 @@ public class ServerComponent implements NetworkComponent {
                 workerGroup.shutdownGracefully();
 
                 msgHandler.networkStopped();
+
+                active = false;
             }
         });
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 }
