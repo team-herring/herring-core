@@ -23,7 +23,7 @@ public class CruiserClientConnection implements Serializable {
         this.rowDelimiter = rowDelimiter;
         this.columnDelimiter = columnDelimiter;
         this.contentDelimiter = contentDelimiter;
-        
+
         validate();
     }
 
