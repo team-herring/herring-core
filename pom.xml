@@ -10,6 +10,32 @@
     <version>0.1-SNAPSHOT</version>
     <name>herring-core</name>
 
+
+    <dependencies>
+        <!-- ==================== -->
+        <!-- =======Herring====== -->
+        <!-- ==================== -->
+        <dependency>
+            <groupId>org.herring</groupId>
+            <artifactId>herring-protocol</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ==================== -->
+    <!-- =Herring Repository= -->
+    <!-- ==================== -->
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://maven.chiwanpark.com/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <!-- ==================== -->
+    <!-- ====Deploy Config=== -->
+    <!-- ==================== -->
     <distributionManagement>
         <repository>
             <id>maven.chiwanpark.com</id>

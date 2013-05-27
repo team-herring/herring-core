@@ -32,6 +32,8 @@ public class CruiserClientConnection implements Serializable {
      * 1. uuid가 정상적이지 않으면 false
      * 2. parsing 된 데이터가 전송 될 것인데 delimiter 가 정의되지 않은 경우
      * 3. parsing 되지 않은 데이터가 전송 될 것인데, 필요없는 delimiter 가 정의되어 있는 경우
+     *
+     * @return true : 정상적인 입력값, false : 비정상적인 입력 값
      */
     private boolean validate() {
         if (clientUUID == null) {
