@@ -4,20 +4,22 @@ import java.io.Serializable;
 
 /**
  * Cruiser 와 Client 가 통신 할 때 사용하는 객체.
- * CruiserClientConnection 객체는 Client 가 Cruiser 로 연결을 요청할 때 사용한다.
+ * CruiserAgentConnectionObject 객체는 Client 가 Cruiser 로 연결을 요청할 때 사용한다.
  * User: hyunje
  * Date: 13. 5. 26.
  * Time: 오전 12:12
  */
-public class CruiserClientConnection implements Serializable {
+public class CruiserAgentConnectionObject implements Serializable {
     private static final long serialVersionUID = -847248108392015L;
     boolean isParsed;
     String rowDelimiter;
     String columnDelimiter;
     String contentDelimiter;
     private String clientUUID;
+    int command;
 
-    public CruiserClientConnection(String clientUUID, boolean isParsed, String rowDelimiter, String columnDelimiter, String contentDelimiter) {
+    public CruiserAgentConnectionObject(String clientUUID, boolean isParsed, String rowDelimiter, String columnDelimiter, String contentDelimiter) {
+        this.command = HerringCruiserCommand.REQUEST_CONNECTION;
         this.clientUUID = clientUUID;
         this.isParsed = isParsed;
         this.rowDelimiter = rowDelimiter;
@@ -37,18 +39,18 @@ public class CruiserClientConnection implements Serializable {
      */
     private boolean validate() {
         if (clientUUID == null) {
-            System.out.println("ClientUUID가 제대로 정의되지 않았습니다.");
+            System.out.println("ClientUUID 가 제대로 정의되지 않았습니다.");
             return false;
         }
 
         if (isParsed) {
             if (rowDelimiter == null || columnDelimiter == null || contentDelimiter == null) {
-                System.out.println("Delimiter가 부족합니다.");
+                System.out.println("Delimiter 가 부족합니다.");
                 return false;
             }
         } else {
             if (rowDelimiter == null || columnDelimiter != null || contentDelimiter != null) {
-                System.out.println("필요 없는Delimiter가 정의되었습니다.");
+                System.out.println("필요 없는 Delimiter 가 정의되었습니다.");
                 return false;
             }
         }
