@@ -10,6 +10,11 @@
     <version>0.1-SNAPSHOT</version>
     <name>herring-core</name>
 
+    <properties>
+        <junit.version>4.11</junit.version>
+        <herring.protocol.version>0.2-SNAPSHOT</herring.protocol.version>
+    </properties>
+
 
     <dependencies>
         <!-- ==================== -->
@@ -18,7 +23,16 @@
         <dependency>
             <groupId>org.herring</groupId>
             <artifactId>herring-protocol</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${herring.protocol.version}</version>
+        </dependency>
+
+        <!-- ==================== -->
+        <!-- ========JUnit======= -->
+        <!-- ==================== -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
         </dependency>
 
     </dependencies>
