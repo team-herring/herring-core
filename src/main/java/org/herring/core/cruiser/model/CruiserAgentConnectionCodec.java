@@ -21,9 +21,7 @@ import java.io.*;
  * Date: 13. 5. 28.
  * Time: 오전 8:53
  */
-public class CruiserAgentConnectionCodec implements HerringCodec, Serializable{
-    private static final long serialVersionUID = -8683692019372094L;
-
+public class CruiserAgentConnectionCodec implements HerringCodec{
     /**
      * Agent에서 Cruiser로 연결을 요청할 때 사용하는 데이터를 Encoding 하는 함수
      * Object o 는 @link{CruiserAgentConnectionObject}이어야 한다.
