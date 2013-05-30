@@ -14,17 +14,15 @@ public class CruiserAgentConnectionObject implements Serializable {
     boolean isParsed;
     String rowDelimiter;
     String columnDelimiter;
-    String contentDelimiter;
+    String dataDelimiter;
     private String clientUUID;
-    int command;
 
-    public CruiserAgentConnectionObject(String clientUUID, boolean isParsed, String rowDelimiter, String columnDelimiter, String contentDelimiter) {
-        this.command = HerringCruiserCommand.REQUEST_CONNECTION;
+    public CruiserAgentConnectionObject(String clientUUID, boolean isParsed, String rowDelimiter, String columnDelimiter, String dataDelimiter) {
         this.clientUUID = clientUUID;
         this.isParsed = isParsed;
         this.rowDelimiter = rowDelimiter;
         this.columnDelimiter = columnDelimiter;
-        this.contentDelimiter = contentDelimiter;
+        this.dataDelimiter = dataDelimiter;
 
         validate();
     }
@@ -44,12 +42,12 @@ public class CruiserAgentConnectionObject implements Serializable {
         }
 
         if (isParsed) {
-            if (rowDelimiter == null || columnDelimiter == null || contentDelimiter == null) {
+            if (rowDelimiter == null || columnDelimiter == null || dataDelimiter == null) {
                 System.out.println("Delimiter 가 부족합니다.");
                 return false;
             }
         } else {
-            if (rowDelimiter == null || columnDelimiter != null || contentDelimiter != null) {
+            if (rowDelimiter == null || columnDelimiter != null || dataDelimiter != null) {
                 System.out.println("필요 없는 Delimiter 가 정의되었습니다.");
                 return false;
             }
