@@ -1,6 +1,6 @@
-package org.herring.protocol.handler;
+package org.herring.core.protocol.handler;
 
-import org.herring.protocol.NetworkContext;
+import org.herring.core.protocol.NetworkContext;
 
 /**
  * @author Chiwan Park
@@ -9,7 +9,7 @@ import org.herring.protocol.NetworkContext;
 public abstract class MessageHandler {
 
     /**
-     * 네트워크를 통해 외부에서 데이터가 도착했을 때 호출되는 메서드. 주어지는 데이터는 이미 {@link org.herring.protocol.codec.HerringCodec}을 통해 디코딩이 이루어진 상태이다.
+     * 네트워크를 통해 외부에서 데이터가 도착했을 때 호출되는 메서드. 주어지는 데이터는 이미 {@link org.herring.core.protocol.codec.HerringCodec}을 통해 디코딩이 이루어진 상태이다.
      *
      * @param context 해당 메시지가 도착한 NetworkContext
      * @param data    도착한 데이터

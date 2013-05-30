@@ -1,4 +1,4 @@
-package org.herring.protocol.codec;
+package org.herring.core.protocol.codec;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,4 +1,4 @@
-package org.herring.protocol.codec;
+package org.herring.core.protocol.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

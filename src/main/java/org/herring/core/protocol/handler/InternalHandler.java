@@ -1,8 +1,8 @@
-package org.herring.protocol.handler;
+package org.herring.core.protocol.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
-import org.herring.protocol.NetworkContext;
+import org.herring.core.protocol.NetworkContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

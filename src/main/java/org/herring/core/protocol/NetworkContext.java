@@ -1,9 +1,9 @@
-package org.herring.protocol;
+package org.herring.core.protocol;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import org.herring.protocol.handler.MessageHandler;
+import org.herring.core.protocol.handler.MessageHandler;
 
 /**
  * Netty Channel 객체에서 Herring Framework에 필요한 기능만 제공하는 Wrapper 클래스. 모든 네트워크 핸들러에서 이 객체가 제공되며, 이 객체는 1회용이므로 반드시 핸들러 내부에서만 사용하는 것이 원칙이다.
@@ -46,7 +46,7 @@ public class NetworkContext {
     }
 
     /**
-     * 등록된 Netty Channel로 지정된 Object를 전송한다. 이 때 전송되는 Object는 반드시 {@link org.herring.protocol.codec.HerringCodec}이 구현되어있어야하며, 해당 Codec이 지정 네트워크에 등록되어있어야한다. 성공적으로 전송이 수행되면, 주어진 핸들러의 sendComplete 메서드가 호출된다.
+     * 등록된 Netty Channel로 지정된 Object를 전송한다. 이 때 전송되는 Object는 반드시 {@link org.herring.core.protocol.codec.HerringCodec}이 구현되어있어야하며, 해당 Codec이 지정 네트워크에 등록되어있어야한다. 성공적으로 전송이 수행되면, 주어진 핸들러의 sendComplete 메서드가 호출된다.
      *
      * @param object  전송할 객체
      * @param handler 결과를 통보받을 핸들러

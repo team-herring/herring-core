@@ -1,4 +1,4 @@
-package org.herring.protocol;
+package org.herring.core.protocol;
 
 /**
  * Herring Network를 구성하는 구성요소 인터페이스. 모든 Herring Network Component는 이 인터페이스를 구현해야한다.

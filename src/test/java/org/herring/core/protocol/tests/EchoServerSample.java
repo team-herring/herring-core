@@ -1,10 +1,10 @@
-package org.herring.protocol.tests;
+package org.herring.core.protocol.tests;
 
-import org.herring.protocol.NetworkContext;
-import org.herring.protocol.ServerComponent;
-import org.herring.protocol.codec.HerringCodec;
-import org.herring.protocol.codec.SerializableCodec;
-import org.herring.protocol.handler.MessageHandler;
+import org.herring.core.protocol.NetworkContext;
+import org.herring.core.protocol.ServerComponent;
+import org.herring.core.protocol.codec.HerringCodec;
+import org.herring.core.protocol.codec.SerializableCodec;
+import org.herring.core.protocol.handler.MessageHandler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

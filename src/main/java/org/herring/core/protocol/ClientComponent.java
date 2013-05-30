@@ -1,11 +1,11 @@
-package org.herring.protocol;
+package org.herring.core.protocol;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.herring.protocol.codec.HerringCodec;
-import org.herring.protocol.handler.MessageHandler;
+import org.herring.core.protocol.codec.HerringCodec;
+import org.herring.core.protocol.handler.MessageHandler;
 
 /**
  * Herring Protocol Library를 사용하는 Client Network Component 클래스.

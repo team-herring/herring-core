@@ -12,7 +12,6 @@
 
     <properties>
         <junit.version>4.11</junit.version>
-        <herring.protocol.version>0.2-SNAPSHOT</herring.protocol.version>
         <zookeeper.version>3.4.5</zookeeper.version>
         <log4j.version>1.2.17</log4j.version>
         <netty.version>4.0.0.CR3</netty.version>
@@ -20,14 +19,6 @@
 
 
     <dependencies>
-        <!-- ==================== -->
-        <!-- =======Herring====== -->
-        <!-- ==================== -->
-        <dependency>
-            <groupId>org.herring</groupId>
-            <artifactId>herring-protocol</artifactId>
-            <version>${herring.protocol.version}</version>
-        </dependency>
 
         <!-- ==================== -->
         <!-- ========JUnit======= -->

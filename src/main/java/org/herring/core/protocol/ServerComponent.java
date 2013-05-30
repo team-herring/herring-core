@@ -1,11 +1,11 @@
-package org.herring.protocol;
+package org.herring.core.protocol;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.herring.protocol.codec.HerringCodec;
-import org.herring.protocol.handler.MessageHandler;
+import org.herring.core.protocol.codec.HerringCodec;
+import org.herring.core.protocol.handler.MessageHandler;
 
 /**
  * 서버 역할을 수행하는 구성요소 클래스. 지정 포트를 열고 대기하여 클라이언트로 부터 응답이 오면 작업을 수행한다.
@@ -16,7 +16,7 @@ import org.herring.protocol.handler.MessageHandler;
 public class ServerComponent implements NetworkComponent {
     private final int port;
     private final MessageHandler msgHandler;
-    private final HerringCodec codec;
+    private final org.herring.core.protocol.codec.HerringCodec codec;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
