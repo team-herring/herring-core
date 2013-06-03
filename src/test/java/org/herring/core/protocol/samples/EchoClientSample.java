@@ -1,4 +1,4 @@
-package org.herring.core.protocol.tests;
+package org.herring.core.protocol.samples;
 
 import org.herring.core.protocol.ClientComponent;
 import org.herring.core.protocol.NetworkContext;
