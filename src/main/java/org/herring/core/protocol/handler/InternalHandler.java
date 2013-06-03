@@ -3,6 +3,7 @@ package org.herring.core.protocol.handler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 import org.herring.core.protocol.NetworkContext;
+import org.herring.core.protocol.NetworkContextFactory;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object> {
 
     private static final Logger logger = Logger.getLogger(InternalHandler.class.getName());
+    private static final NetworkContextFactory CONTEXT_FACTORY = NetworkContextFactory.getInstance();
 
     private MessageHandler handler;
 
@@ -27,14 +29,24 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         logger.log(Level.INFO, "Channel Active");
 
-        handler.channelReady(new NetworkContext(ctx.channel()));
+        NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
+        if (context.isAvailableLatch("active"))
+            context.getLatch("active").countDown();
+
+        if (handler != null)
+            handler.channelActive(context);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         logger.log(Level.INFO, "Channel Inactive");
 
-        handler.channelInactive(new NetworkContext(ctx.channel()));
+        NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
+        if (context.isAvailableLatch("inactive"))
+            context.getLatch("inactive").countDown();
+
+        if (handler != null)
+            handler.channelInactive(context);
     }
 
     @Override
@@ -48,6 +60,13 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
     public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.log(Level.INFO, "Message Received");
 
-        handler.messageArrived(new NetworkContext(ctx.channel()), msg);
+        NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
+        if (context.isAvailableLatch("received"))
+            context.getLatch("received").countDown();
+
+        if (handler != null) {
+            if (!handler.messageArrived(context, msg))
+                context.addMessageToQueue(msg);
+        }
     }
 }

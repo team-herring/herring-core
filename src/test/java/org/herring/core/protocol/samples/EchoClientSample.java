@@ -4,6 +4,7 @@ import org.herring.core.protocol.ClientComponent;
 import org.herring.core.protocol.NetworkContext;
 import org.herring.core.protocol.codec.HerringCodec;
 import org.herring.core.protocol.codec.SerializableCodec;
+import org.herring.core.protocol.handler.AsyncMessageHandler;
 import org.herring.core.protocol.handler.MessageHandler;
 
 import java.io.BufferedReader;
@@ -16,38 +17,21 @@ import java.io.InputStreamReader;
  * @since 0.1
  */
 public class EchoClientSample {
-    private final static String host = "127.0.0.1";
-    private final static int port = 9928;
+    private final static String HOST = "127.0.0.1";
+    private final static int PORT = 9928;
 
     private ClientComponent clientComponent;
 
     public static void main(String[] args) throws Exception {
         EchoClientSample clientSample = new EchoClientSample();
 
-        MessageHandler handler = new MessageHandler() {
+        MessageHandler handler = new AsyncMessageHandler() {
             @Override
-            public void messageArrived(NetworkContext context, Object data) throws Exception {
+            public boolean messageArrived(NetworkContext context, Object data) throws Exception {
                 System.out.println((String) data);
-            }
+                System.out.println("Received Thread ID: " + Thread.currentThread().getId());
 
-            @Override
-            public void channelReady(NetworkContext context) throws Exception {
-                System.out.println("연결 준비");
-            }
-
-            @Override
-            public void channelInactive(NetworkContext context) throws Exception {
-                System.out.println("연결 끊어짐");
-            }
-
-            @Override
-            public void channelClosed(NetworkContext context) throws Exception {
-                System.out.println("연결 종료됨");
-            }
-
-            @Override
-            public void networkStopped() throws Exception {
-                System.out.println("네트워크 종료됨");
+                return true;
             }
         };
 
@@ -56,14 +40,15 @@ public class EchoClientSample {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
         try {
-            clientSample.clientComponent = new ClientComponent(host, port, codec, handler);
+            clientSample.clientComponent = new ClientComponent(HOST, PORT, codec, handler);
             clientSample.clientComponent.start();
 
-            String input;
+            System.out.println("Main Thread ID: " + Thread.currentThread().getId());
 
+            String input;
             do {
                 input = in.readLine();
-                clientSample.clientComponent.getChannel().write(input);
+                clientSample.clientComponent.getNetworkContext().sendObject(input);
             } while (!"bye".equalsIgnoreCase(input));
         } finally {
             clientSample.clientComponent.stop();

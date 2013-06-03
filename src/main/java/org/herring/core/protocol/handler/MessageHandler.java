@@ -13,9 +13,10 @@ public abstract class MessageHandler {
      *
      * @param context 해당 메시지가 도착한 NetworkContext
      * @param data    도착한 데이터
+     * @return 데이터를 핸들러에서 처리하여 버퍼에 저장할 필요가 없으면 true, 처리하지 않고 추후 열어볼 예정이면 false
      * @throws Exception 여기서 발생되는 예외는 Logger에 기록된다.
      */
-    public void messageArrived(NetworkContext context, Object data) throws Exception {}
+    public abstract boolean messageArrived(NetworkContext context, Object data) throws Exception;
 
     /**
      * Channel 연결이 성립되어 네트워크 통신이 가능한 상태에서 호출되는 메서드.
@@ -23,7 +24,7 @@ public abstract class MessageHandler {
      * @param context 통신 가능한 NetworkContext
      * @throws Exception 여기서 발생되는 예외는 Logger에 기록된다.
      */
-    public void channelReady(NetworkContext context) throws Exception {}
+    public void channelActive(NetworkContext context) throws Exception {}
 
     /**
      * Channel 연결이 어떤 이유에서든 종료되었을 때 호출되는 메서드.
@@ -34,25 +35,9 @@ public abstract class MessageHandler {
     public void channelInactive(NetworkContext context) throws Exception {}
 
     /**
-     * Channel 연결 종료를 요청하고, 정상적으로 종료되었을 때 호출되는 메서드.
-     *
-     * @param context 종료를 요청했던 NetworkContext
-     * @throws Exception 여기서 발생되는 예외는 Logger에 기록된다.
-     */
-    public void channelClosed(NetworkContext context) throws Exception {}
-
-    /**
      * 네트워크의 모든 연결 종료를 요청하고, 정상적으로 종료되었을 때 호출되는 메서드.
      *
      * @throws Exception 여기서 발생되는 예외는 Logger에 기록된다.
      */
     public void networkStopped() throws Exception {}
-
-    /**
-     * NetworkContext에서 sendObject를 요청하여 성공적으로 메시지를 전송했을 때 호출되는 메서드.
-     *
-     * @param context sendObject를 요청했던 NetworkContext
-     * @throws Exception 여기서 발생되는 예외는 Logger에 기록된다.
-     */
-    public void sendComplete(NetworkContext context) throws Exception {}
 }
