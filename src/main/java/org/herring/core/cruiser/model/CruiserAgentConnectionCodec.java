@@ -41,7 +41,7 @@ public class CruiserAgentConnectionCodec implements HerringCodec {
      * Command가 2인 경우에는 String 형태의 객체이다.
      *
      * @param o Object
-     * @return encoding 된 byteArray
+     * @return encoded byte[]
      * @throws Exception
      */
     @Override
@@ -67,22 +67,6 @@ public class CruiserAgentConnectionCodec implements HerringCodec {
         }
 
         return buffer.array();
-
-        /*
-        CruiserAgentConnectionObject connectionObject;
-        try{
-            connectionObject = (CruiserAgentConnectionObject)o;
-        } catch (ClassCastException e){
-            System.out.println("Object o cannot be casted to CruiserAgentConnectionObject");
-            return null;
-        }
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-
-        objectOutputStream.writeObject(connectionObject);
-
-        return outputStream.toByteArray();
-        */
     }
 
     /**
