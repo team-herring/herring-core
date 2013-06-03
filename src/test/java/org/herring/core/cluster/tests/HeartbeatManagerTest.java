@@ -12,7 +12,7 @@ import java.util.UUID;
  * @since 0.1
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class HeartbeatManagerTests {
+public class HeartbeatManagerTest {
 
     private static String uri;
     private static int timeout;

@@ -15,7 +15,7 @@ import java.util.Properties;
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ZookeeperClientTests {
+public class ZookeeperClientTest {
     private static ZookeeperClient zkClient;
     private static Properties properties;
 

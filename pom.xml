@@ -15,6 +15,7 @@
         <zookeeper.version>3.4.5</zookeeper.version>
         <log4j.version>1.2.17</log4j.version>
         <netty.version>4.0.0.CR3</netty.version>
+        <maven.surefire.version>2.14.1</maven.surefire.version>
     </properties>
 
 
@@ -82,5 +83,47 @@
             <url>http://maven.chiwanpark.com/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <!-- ==================== -->
+    <!-- =====Test Config==== -->
+    <!-- ==================== -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <systemProperties>
+                        <user.timezone>GMT</user.timezone>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- ==================== -->
+    <!-- ====Test Profile==== -->
+    <!-- ==================== -->
+    <profiles>
+        <profile>
+            <id>without-zookeeper-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>/org/herring/core/zookeeper/tests/*.java</exclude>
+                                <exclude>/org/herring/core/cluster/tests/*.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
