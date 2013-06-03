@@ -13,6 +13,7 @@ public class InternalDecoder extends LengthFieldBasedFrameDecoder {
     private HerringCodec codec;
 
     public InternalDecoder(HerringCodec codec) {
+        // TODO: 프레임 길이를 적절하게 조정할 필요가 있음
         super(10485760, 0, 4, 0, 4);
 
         this.codec = codec;
