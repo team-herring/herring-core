@@ -78,4 +78,8 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
 
         return new DateTimeType(calendar);
     }
+
+    public long getTimeInMillis() {
+        return getValue().getTimeInMillis();
+    }
 }
