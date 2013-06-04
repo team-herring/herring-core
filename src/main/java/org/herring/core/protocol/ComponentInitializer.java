@@ -10,8 +10,10 @@ import org.herring.core.protocol.handler.InternalHandler;
 import org.herring.core.protocol.handler.MessageHandler;
 
 /**
+ * Netty에게 Herring Protocol Library의 파이프라인을 구성하여 전달하는 초기화 클래스.
+ *
  * @author Chiwan Park
- * @since 0.2
+ * @since 0.1
  */
 public class ComponentInitializer extends ChannelInitializer<SocketChannel> {
 

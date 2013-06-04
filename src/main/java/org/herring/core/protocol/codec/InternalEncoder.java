@@ -5,8 +5,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
+ * Herring Protocol Library 내부에서 Netty와 통신하기 위해 사용하는 ByteEncoder 클래스.
+ *
  * @author Chiwan Park
- * @since 0.2
+ * @since 0.1
  */
 public class InternalEncoder extends MessageToByteEncoder<Object> {
 

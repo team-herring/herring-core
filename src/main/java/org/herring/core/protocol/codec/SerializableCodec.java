@@ -6,8 +6,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
+ * Serializable이 구현된 객체들을 기본 Seriailzation Method로 직렬화하는 Codec 클래스.
+ * 많은 경우에 기본으로 사용할 수 있다.
+ *
  * @author Chiwan Park
- * @since 0.2
+ * @since 0.1
  */
 public class SerializableCodec implements HerringCodec {
     @Override

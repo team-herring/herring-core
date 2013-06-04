@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * DateTimeType 클래스의 기본 기능 테스트 케이스.
+ *
  * @author Chiwan Park
  * @since 0.1
  */

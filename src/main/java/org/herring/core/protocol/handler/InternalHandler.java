@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Netty에서 들어오는 데이터를 맨 처음 다루는 Handler 클래스.
+ * Netty에서 들어오는 데이터를 Decode 한 뒤 해당 데이터를 처음 다루는 Handler 클래스.
  *
  * @author Chiwan Park
  * @since 0.1

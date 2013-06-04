@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * NetworkContext 객체의 생성을 전담하는 클래스.
+ * 모든 NetworkContext 객체는 Herring Protocol Library가 관리하기 위하여 NetworkContextFactory를 통해 생성되어야 한다.
+ *
  * @author Chiwan Park
  * @since 0.1
  */

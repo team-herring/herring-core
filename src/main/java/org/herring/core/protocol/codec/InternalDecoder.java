@@ -5,8 +5,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
+ * Herring Protocol Library 내부에서 Netty와 통신하기 위해 사용하는 FrameDecoder 클래스.
+ *
  * @author Chiwan Park
- * @since 0.2
+ * @since 0.1
  */
 public class InternalDecoder extends LengthFieldBasedFrameDecoder {
 

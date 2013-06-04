@@ -1,7 +1,7 @@
 package org.herring.core.zookeeper;
 
 /**
- * herring-zkClient에서 사용하는 예외 기본 클래스.
+ * Herring Zookeeper Library에서 사용하는 예외 기본 클래스.
  *
  * @author Chiwan Park
  * @since 0.1

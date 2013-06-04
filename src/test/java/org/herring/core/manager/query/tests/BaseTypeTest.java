@@ -8,8 +8,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 /**
+ * BaseType 클래스의 기본 기능 테스트 케이스.
+ *
  * @author Chiwan Park
- * @{link org.herring.core.manager.query.types.BaseType} 클래스의 기본 기능 테스트 케이스.
  * @since 0.1
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
