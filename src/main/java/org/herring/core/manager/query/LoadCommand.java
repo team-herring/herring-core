@@ -2,6 +2,9 @@ package org.herring.core.manager.query;
 
 import org.herring.core.manager.query.types.DateTimeType;
 import org.herring.core.manager.query.types.FieldType;
+import org.herring.core.manager.query.types.TimeRangeType;
+
+import java.util.AbstractMap;
 
 /**
  * 데이터 셋을 불러오는 쿼리 명령 클래스다.
@@ -15,14 +18,13 @@ public class LoadCommand extends QueryCommand {
     private static final long serialVersionUID = -5646013501815425729L;
 
     private FieldType dataSet;
-    private DateTimeType start;
-    private DateTimeType end;
+    private TimeRangeType timeRange;
 
-    public LoadCommand(FieldType dataSet, DateTimeType start, DateTimeType end) {
+    public LoadCommand(FieldType dataSet, TimeRangeType timeRange) {
         super(CommandType.LOAD);
 
         setDataSet(dataSet);
-        setDateRange(start, end);
+        setTimeRange(timeRange);
     }
 
     /**
@@ -44,7 +46,7 @@ public class LoadCommand extends QueryCommand {
      * @return 지정된 시간 범위의 시작
      */
     public DateTimeType getStartTime() {
-        return start;
+        return getTimeRange().getKey();
     }
 
     /**
@@ -53,15 +55,15 @@ public class LoadCommand extends QueryCommand {
      * @return 지정된 시간 범위의 끝
      */
     public DateTimeType getEndTime() {
-        return end;
+        return getTimeRange().getValue();
     }
 
-    private void setDateRange(DateTimeType start, DateTimeType end) {
-        if (start.compareTo(end) > 0)
-            throw new IllegalArgumentException("시작 시간은 반드시 끝 시간 보다 빨라야 합니다.");
+    private AbstractMap.SimpleEntry<DateTimeType, DateTimeType> getTimeRange() {
+        return timeRange.getValue();
+    }
 
-        this.start = start;
-        this.end = end;
+    private void setTimeRange(TimeRangeType timeRange) {
+        this.timeRange = timeRange;
     }
 
     @Override

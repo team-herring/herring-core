@@ -30,6 +30,10 @@ public class DateTimeType extends BaseType<Calendar> implements Comparable<DateT
         super(Calendar.class, value);
     }
 
+    public DateTimeType(DateTimeType value) {
+        this((Calendar) value.getValue().clone());
+    }
+
     @Override
     protected Calendar copyValueInstance(Calendar value) {
         return (Calendar) value.clone();
