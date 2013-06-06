@@ -14,7 +14,7 @@ import java.util.List;
  * @author Chiwan Park
  * @since 0.1
  */
-public class DateTimeType extends BaseType<Calendar> implements Comparable<DateTimeType> {
+public class TimeType extends BaseType<Calendar> implements Comparable<TimeType> {
 
     private static final long serialVersionUID = 1389684777539441981L;
     private static final List<DateFormat> patternList = new ArrayList<DateFormat>() {
@@ -26,11 +26,11 @@ public class DateTimeType extends BaseType<Calendar> implements Comparable<DateT
         }
     };
 
-    public DateTimeType(Calendar value) {
+    public TimeType(Calendar value) {
         super(Calendar.class, value);
     }
 
-    public DateTimeType(DateTimeType value) {
+    public TimeType(TimeType value) {
         this((Calendar) value.getValue().clone());
     }
 
@@ -40,14 +40,14 @@ public class DateTimeType extends BaseType<Calendar> implements Comparable<DateT
     }
 
     @Override
-    public int compareTo(DateTimeType o) {
+    public int compareTo(TimeType o) {
         Calendar a = getValue();
         Calendar b = o.getValue();
 
         return a.compareTo(b);
     }
 
-    public static DateTimeType valueOf(String value) {
+    public static TimeType valueOf(String value) {
         boolean flag = false;
         Calendar calendar = Calendar.getInstance();
 
@@ -64,10 +64,10 @@ public class DateTimeType extends BaseType<Calendar> implements Comparable<DateT
         if (!flag)
             throw new IllegalArgumentException("문자열 형식이 올바르지 않습니다.");
 
-        return new DateTimeType(calendar);
+        return new TimeType(calendar);
     }
 
-    public static DateTimeType valueOf(String date, String time, String zone) {
+    public static TimeType valueOf(String date, String time, String zone) {
         return valueOf(date + "T" + time + "Z" + zone);
     }
 
@@ -77,6 +77,6 @@ public class DateTimeType extends BaseType<Calendar> implements Comparable<DateT
 
     @Override
     public String toString() {
-        return "[<DateTimeType> value=" + getValue().toString() + "]";
+        return "[<TimeType> value=" + getValue().toString() + "]";
     }
 }

@@ -1,6 +1,6 @@
 package org.herring.core.manager.query;
 
-import org.herring.core.manager.query.types.DateTimeType;
+import org.herring.core.manager.query.types.TimeType;
 import org.herring.core.manager.query.types.FieldType;
 import org.herring.core.manager.query.types.TimeRangeType;
 
@@ -45,7 +45,7 @@ public class LoadCommand extends QueryCommand {
      *
      * @return 지정된 시간 범위의 시작
      */
-    public DateTimeType getStartTime() {
+    public TimeType getStartTime() {
         return getTimeRange().getKey();
     }
 
@@ -54,11 +54,11 @@ public class LoadCommand extends QueryCommand {
      *
      * @return 지정된 시간 범위의 끝
      */
-    public DateTimeType getEndTime() {
+    public TimeType getEndTime() {
         return getTimeRange().getValue();
     }
 
-    private AbstractMap.SimpleEntry<DateTimeType, DateTimeType> getTimeRange() {
+    private AbstractMap.SimpleEntry<TimeType, TimeType> getTimeRange() {
         return timeRange.getValue();
     }
 

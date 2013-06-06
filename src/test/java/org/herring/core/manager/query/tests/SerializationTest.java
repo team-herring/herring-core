@@ -44,10 +44,10 @@ public class SerializationTest {
 
     @Test
     public void dateTimeTypeTest() throws Exception {
-        DateTimeType dateTime = DateTimeType.valueOf("2009-05-23");
+        TimeType dateTime = TimeType.valueOf("2009-05-23");
 
         byte[] encoded = CODEC.encode(dateTime);
-        DateTimeType restored = (DateTimeType) CODEC.decode(encoded);
+        TimeType restored = (TimeType) CODEC.decode(encoded);
 
         Assert.assertEquals(dateTime, restored);
     }
@@ -64,7 +64,7 @@ public class SerializationTest {
 
     @Test
     public void timeRangeTypeTest() throws Exception {
-        TimeRangeType timeRange = new TimeRangeType(DateTimeType.valueOf("2013-05-20"), DateTimeType.valueOf("2013-05-30"));
+        TimeRangeType timeRange = new TimeRangeType(TimeType.valueOf("2013-05-20"), TimeType.valueOf("2013-05-30"));
 
         byte[] encoded = CODEC.encode(timeRange);
         TimeRangeType restored = (TimeRangeType) CODEC.decode(encoded);

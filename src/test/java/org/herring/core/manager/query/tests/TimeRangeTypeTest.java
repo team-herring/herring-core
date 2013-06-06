@@ -1,6 +1,6 @@
 package org.herring.core.manager.query.tests;
 
-import org.herring.core.manager.query.types.DateTimeType;
+import org.herring.core.manager.query.types.TimeType;
 import org.herring.core.manager.query.types.TimeRangeType;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -21,6 +21,6 @@ public class TimeRangeTypeTest {
     @Test
     public void testCreateCondition() throws Exception {
         exception.expect(IllegalArgumentException.class);
-        TimeRangeType range = new TimeRangeType(DateTimeType.valueOf("2013-05-30"), DateTimeType.valueOf("2013-05-29"));
+        TimeRangeType range = new TimeRangeType(TimeType.valueOf("2013-05-30"), TimeType.valueOf("2013-05-29"));
     }
 }
