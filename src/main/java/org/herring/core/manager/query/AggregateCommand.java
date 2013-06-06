@@ -9,7 +9,7 @@ import org.herring.core.manager.query.types.FieldType;
  * @author Chiwan Park
  * @since 0.1
  */
-public abstract class AggregateCommand extends QueryCommand {
+public class AggregateCommand extends QueryCommand {
 
     private static final long serialVersionUID = -4148499401919382882L;
 
