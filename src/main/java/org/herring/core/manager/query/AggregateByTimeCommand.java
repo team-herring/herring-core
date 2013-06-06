@@ -16,8 +16,8 @@ public class AggregateByTimeCommand extends AggregateCommand {
 
     private NumberType groupingTimeSpan;
 
-    public AggregateByTimeCommand(AggregateMethod aggregateMethod, GroupMethod groupMethod, FieldType aggregatedField, FieldType resultField, NumberType groupingTimeSpan) {
-        super(aggregateMethod, groupMethod, aggregatedField, resultField);
+    public AggregateByTimeCommand(AggregateFunction aggregateFunction, AggregateMethod aggregateMethod, FieldType aggregatedField, FieldType resultField, NumberType groupingTimeSpan) {
+        super(aggregateFunction, aggregateMethod, aggregatedField, resultField);
 
         setGroupingTimeSpan(groupingTimeSpan);
     }

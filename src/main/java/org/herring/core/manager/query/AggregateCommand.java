@@ -23,7 +23,7 @@ public abstract class AggregateCommand extends QueryCommand {
      * MEDIAN: 그루핑된 집합의 중앙값을 구한다.
      * COUNT: 그루핑된 집합의 지정 필드의 유효 값의 갯수를 구한다.
      */
-    public enum AggregateMethod {
+    public enum AggregateFunction {
         AVERAGE, SUM, MIN, MAX, MEDIAN, COUNT
     }
 
@@ -33,20 +33,20 @@ public abstract class AggregateCommand extends QueryCommand {
      * FIELD: 그루핑 기준이 특정 필드임을 나타낸다. 객체를 @{link AggregateByFieldCommand}로 캐스팅하여 사용한다.
      * TIME: 그루핑 기준이 시간 간격임을 나타낸다. 객체를 @{link AggregateByTimeCommand}로 캐스팅하여 사용한다.
      */
-    public enum GroupMethod {
+    public enum AggregateMethod {
         FIELD, TIME
     }
 
+    private AggregateFunction aggregateFunction;
     private AggregateMethod aggregateMethod;
-    private GroupMethod groupMethod;
     private FieldType aggregatedField;
     private FieldType resultField;
 
-    public AggregateCommand(AggregateMethod aggregateMethod, GroupMethod groupMethod, FieldType aggregatedField, FieldType resultField) {
+    public AggregateCommand(AggregateFunction aggregateFunction, AggregateMethod aggregateMethod, FieldType aggregatedField, FieldType resultField) {
         super(CommandType.AGGREGATE);
 
+        setAggregateFunction(aggregateFunction);
         setAggregateMethod(aggregateMethod);
-        setGroupMethod(groupMethod);
         setAggregatedField(aggregatedField);
         setResultField(resultField);
     }
@@ -56,12 +56,12 @@ public abstract class AggregateCommand extends QueryCommand {
      *
      * @return 집계 연산의 종류를 나타내는 상수
      */
-    public AggregateMethod getAggregateMethod() {
-        return aggregateMethod;
+    public AggregateFunction getAggregateFunction() {
+        return aggregateFunction;
     }
 
-    private void setAggregateMethod(AggregateMethod aggregateMethod) {
-        this.aggregateMethod = aggregateMethod;
+    private void setAggregateFunction(AggregateFunction aggregateFunction) {
+        this.aggregateFunction = aggregateFunction;
     }
 
     /**
@@ -69,12 +69,12 @@ public abstract class AggregateCommand extends QueryCommand {
      *
      * @return 그루핑 기준을 나타내는 상수
      */
-    public GroupMethod getGroupMethod() {
-        return groupMethod;
+    public AggregateMethod getAggregateMethod() {
+        return aggregateMethod;
     }
 
-    private void setGroupMethod(GroupMethod groupMethod) {
-        this.groupMethod = groupMethod;
+    private void setAggregateMethod(AggregateMethod aggregateMethod) {
+        this.aggregateMethod = aggregateMethod;
     }
 
     /**
@@ -105,6 +105,6 @@ public abstract class AggregateCommand extends QueryCommand {
 
     @Override
     public String toString() {
-        return "<Aggregate> method=" + getAggregateMethod().toString() + ", groupMethod=" + getGroupMethod().toString();
+        return "<Aggregate> function=" + getAggregateFunction().toString() + ", aggregateMethod=" + getAggregateMethod().toString();
     }
 }

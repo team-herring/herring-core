@@ -14,8 +14,8 @@ public class AggregateByFieldCommand extends AggregateCommand {
 
     private FieldType groupingField;
 
-    public AggregateByFieldCommand(AggregateMethod aggregateMethod, GroupMethod groupMethod, FieldType aggregatedField, FieldType resultField, FieldType groupingField) {
-        super(aggregateMethod, groupMethod, aggregatedField, resultField);
+    public AggregateByFieldCommand(AggregateFunction aggregateFunction, AggregateMethod aggregateMethod, FieldType aggregatedField, FieldType resultField, FieldType groupingField) {
+        super(aggregateFunction, aggregateMethod, aggregatedField, resultField);
 
         setGroupingField(groupingField);
     }
