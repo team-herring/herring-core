@@ -34,6 +34,14 @@ public class DateTimeTypeTest {
     }
 
     @Test
+    public void valueOfTest2() throws Exception {
+        DateTimeType date1 = DateTimeType.valueOf("2013-06-03T13:35:33");
+        DateTimeType date2 = DateTimeType.valueOf("2013-06-03", "13:35:33", "+0000");
+
+        Assert.assertEquals(date1, date2);
+    }
+
+    @Test
     public void compareTest() throws Exception {
         DateTimeType time1 = DateTimeType.valueOf("2013-06-01");
         DateTimeType time2 = DateTimeType.valueOf("2013-06-22");

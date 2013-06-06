@@ -79,6 +79,10 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
         return new DateTimeType(calendar);
     }
 
+    public static DateTimeType valueOf(String date, String time, String zone) {
+        return valueOf(date + "T" + time + "Z" + zone);
+    }
+
     public long getTimeInMillis() {
         return getValue().getTimeInMillis();
     }
