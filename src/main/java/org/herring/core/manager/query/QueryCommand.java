@@ -44,4 +44,9 @@ public abstract class QueryCommand implements Serializable {
     private void setType(CommandType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "<Query> type=" + getType().toString();
+    }
 }

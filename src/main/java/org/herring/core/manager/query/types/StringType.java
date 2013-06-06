@@ -1,8 +1,5 @@
 package org.herring.core.manager.query.types;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -24,19 +21,12 @@ public class StringType extends BaseType<String> implements Serializable {
         return value;
     }
 
-    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
-        input.defaultReadObject();
-
-        setValue((String) input.readObject());
-    }
-
-    private void writeObject(ObjectOutputStream output) throws IOException {
-        output.defaultWriteObject();
-
-        output.writeObject(getValue());
-    }
-
     public static StringType valueOf(String value) {
         return new StringType(value);
+    }
+
+    @Override
+    public String toString() {
+        return "[<StringType> value=" + getValue() + "]";
     }
 }

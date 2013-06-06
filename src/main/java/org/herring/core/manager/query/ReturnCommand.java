@@ -14,4 +14,9 @@ public class ReturnCommand extends QueryCommand {
     public ReturnCommand() {
         super(CommandType.RETURN);
     }
+
+    @Override
+    public String toString() {
+        return "<Return>";
+    }
 }

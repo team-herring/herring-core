@@ -29,4 +29,11 @@ public class AggregateByTimeCommand extends AggregateCommand {
     private void setGroupingTimeSpan(NumberType groupingTimeSpan) {
         this.groupingTimeSpan = groupingTimeSpan;
     }
+
+    @Override
+    public String toString() {
+        String strSuper = super.toString();
+
+        return strSuper + ", groupingTimeSpan=" + getGroupingTimeSpan().toString();
+    }
 }

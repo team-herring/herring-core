@@ -79,4 +79,9 @@ public class FilterCommand extends QueryCommand {
     private void setOperand2(BaseType operand2) {
         this.operand2 = operand2;
     }
+
+    @Override
+    public String toString() {
+        return "<Filter> operator=" + getOperator().toString() + ", operand1=" + getOperand1().toString() + ", operand2=" + getOperand2().toString();
+    }
 }

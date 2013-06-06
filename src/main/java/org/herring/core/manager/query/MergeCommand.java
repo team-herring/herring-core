@@ -41,4 +41,9 @@ public class MergeCommand extends QueryCommand {
     private void setCondition(Condition condition) {
         this.condition = condition;
     }
+
+    @Override
+    public String toString() {
+        return "<Merge> condition=" + condition.toString();
+    }
 }

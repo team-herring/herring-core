@@ -1,9 +1,5 @@
 package org.herring.core.manager.query.types;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +14,7 @@ import java.util.List;
  * @author Chiwan Park
  * @since 0.1
  */
-public class DateTimeType extends BaseType<Calendar> implements Serializable, Comparable<DateTimeType> {
+public class DateTimeType extends BaseType<Calendar> implements Comparable<DateTimeType> {
 
     private static final long serialVersionUID = 1389684777539441981L;
     private static final List<DateFormat> patternList = new ArrayList<DateFormat>() {
@@ -47,18 +43,6 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
         return a.compareTo(b);
     }
 
-    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
-        input.defaultReadObject();
-
-        setValue((Calendar) input.readObject());
-    }
-
-    private void writeObject(ObjectOutputStream output) throws IOException {
-        output.defaultWriteObject();
-
-        output.writeObject(getValue());
-    }
-
     public static DateTimeType valueOf(String value) {
         boolean flag = false;
         Calendar calendar = Calendar.getInstance();
@@ -85,5 +69,10 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
 
     public long getTimeInMillis() {
         return getValue().getTimeInMillis();
+    }
+
+    @Override
+    public String toString() {
+        return "[<DateTimeType> value=" + getValue().toString() + "]";
     }
 }

@@ -102,4 +102,9 @@ public abstract class AggregateCommand extends QueryCommand {
     private void setResultField(FieldType resultField) {
         this.resultField = resultField;
     }
+
+    @Override
+    public String toString() {
+        return "<Aggregate> method=" + getAggregateMethod().toString() + ", groupMethod=" + getGroupMethod().toString();
+    }
 }

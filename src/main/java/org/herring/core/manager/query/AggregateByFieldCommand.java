@@ -27,4 +27,11 @@ public class AggregateByFieldCommand extends AggregateCommand {
     private void setGroupingField(FieldType groupingField) {
         this.groupingField = groupingField;
     }
+
+    @Override
+    public String toString() {
+        String strSuper = super.toString();
+
+        return strSuper + ", groupingField=" + getGroupingField().toString();
+    }
 }

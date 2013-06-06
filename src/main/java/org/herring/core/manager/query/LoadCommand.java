@@ -63,4 +63,9 @@ public class LoadCommand extends QueryCommand {
         this.start = start;
         this.end = end;
     }
+
+    @Override
+    public String toString() {
+        return "<Load> table=" + getDataSet().toString() + ", start=" + getStartTime().toString() + ", end=" + getEndTime().toString();
+    }
 }
