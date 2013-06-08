@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Chiwan Park
  * @since 0.1
  */
-public abstract class BaseType<T extends Serializable> {
+public abstract class BaseType<T extends Serializable> implements Serializable {
     private T value;
     private Class<?> typeClass;
 
@@ -17,11 +17,11 @@ public abstract class BaseType<T extends Serializable> {
         setTypeClass(Object.class);
     }
 
-    protected BaseType(Class<T> typeClass) {
+    protected BaseType(Class<?> typeClass) {
         setTypeClass(typeClass);
     }
 
-    protected BaseType(Class<T> typeClass, T value) {
+    protected BaseType(Class<?> typeClass, T value) {
         this(typeClass);
         setValue(value);
     }
@@ -47,5 +47,10 @@ public abstract class BaseType<T extends Serializable> {
     @Override
     public boolean equals(Object o) {
         return (o instanceof BaseType) && getValue().equals(((BaseType) o).getValue());
+    }
+
+    @Override
+    public String toString() {
+        return "[<BaseType> typeClass=" + typeClass.toString() + ", value=" + value.toString() + "]";
     }
 }

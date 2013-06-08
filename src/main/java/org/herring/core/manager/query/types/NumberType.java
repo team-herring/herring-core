@@ -1,17 +1,12 @@
 package org.herring.core.manager.query.types;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 /**
  * 쿼리에서 수치형을 대표하는 데이터 타입 클래스.
  *
  * @author Chiwan Park
  * @since 0.1
  */
-public class NumberType extends BaseType<Double> implements Serializable, Comparable<NumberType> {
+public class NumberType extends BaseType<Double> implements Comparable<NumberType> {
 
     private static final long serialVersionUID = 4741968496907818223L;
 
@@ -24,18 +19,6 @@ public class NumberType extends BaseType<Double> implements Serializable, Compar
         return value;
     }
 
-    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
-        input.defaultReadObject();
-
-        setValue(input.readDouble());
-    }
-
-    private void writeObject(ObjectOutputStream output) throws IOException {
-        output.defaultWriteObject();
-
-        output.writeDouble(getValue());
-    }
-
     @Override
     public int compareTo(NumberType o) {
         Double a = getValue();
@@ -46,5 +29,10 @@ public class NumberType extends BaseType<Double> implements Serializable, Compar
 
     public static NumberType valueOf(String value) {
         return new NumberType(Double.valueOf(value));
+    }
+
+    @Override
+    public String toString() {
+        return "[<NumberType> value=" + getValue().toString() + "]";
     }
 }

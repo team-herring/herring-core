@@ -22,7 +22,7 @@ public class ClientComponent implements NetworkComponent {
     private final HerringCodec codec;
 
     private EventLoopGroup group;
-    private Channel nettyChannel;
+    private NetworkContext networkContext;
 
     private Bootstrap bootstrap;
 
@@ -51,20 +51,21 @@ public class ClientComponent implements NetworkComponent {
 
     @Override
     public void start() throws Exception {
-        nettyChannel = bootstrap.connect(host, port).syncUninterruptibly().channel();
+        Channel nettyChannel = bootstrap.connect(host, port).syncUninterruptibly().channel();
+        networkContext = NetworkContextFactory.getInstance().getContext(nettyChannel);
 
         active = true;
     }
 
     @Override
     public void stop() {
-        nettyChannel.close().addListener(new ChannelFutureListener() {
+        networkContext.getChannel().close().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 future.channel().eventLoop().shutdownGracefully();
                 group.shutdownGracefully();
 
-                msgHandler.channelClosed(new NetworkContext(future.channel()));
+                msgHandler.networkStopped();
 
                 active = false;
             }
@@ -76,7 +77,7 @@ public class ClientComponent implements NetworkComponent {
         return active;
     }
 
-    public Channel getChannel() {
-        return nettyChannel;
+    public NetworkContext getNetworkContext() {
+        return networkContext;
     }
 }

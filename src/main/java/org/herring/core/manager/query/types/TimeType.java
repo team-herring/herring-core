@@ -1,9 +1,5 @@
 package org.herring.core.manager.query.types;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +14,7 @@ import java.util.List;
  * @author Chiwan Park
  * @since 0.1
  */
-public class DateTimeType extends BaseType<Calendar> implements Serializable, Comparable<DateTimeType> {
+public class TimeType extends BaseType<Calendar> implements Comparable<TimeType> {
 
     private static final long serialVersionUID = 1389684777539441981L;
     private static final List<DateFormat> patternList = new ArrayList<DateFormat>() {
@@ -30,8 +26,12 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
         }
     };
 
-    public DateTimeType(Calendar value) {
+    public TimeType(Calendar value) {
         super(Calendar.class, value);
+    }
+
+    public TimeType(TimeType value) {
+        this((Calendar) value.getValue().clone());
     }
 
     @Override
@@ -40,26 +40,14 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
     }
 
     @Override
-    public int compareTo(DateTimeType o) {
+    public int compareTo(TimeType o) {
         Calendar a = getValue();
         Calendar b = o.getValue();
 
         return a.compareTo(b);
     }
 
-    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
-        input.defaultReadObject();
-
-        setValue((Calendar) input.readObject());
-    }
-
-    private void writeObject(ObjectOutputStream output) throws IOException {
-        output.defaultWriteObject();
-
-        output.writeObject(getValue());
-    }
-
-    public static DateTimeType valueOf(String value) {
+    public static TimeType valueOf(String value) {
         boolean flag = false;
         Calendar calendar = Calendar.getInstance();
 
@@ -76,6 +64,19 @@ public class DateTimeType extends BaseType<Calendar> implements Serializable, Co
         if (!flag)
             throw new IllegalArgumentException("문자열 형식이 올바르지 않습니다.");
 
-        return new DateTimeType(calendar);
+        return new TimeType(calendar);
+    }
+
+    public static TimeType valueOf(String date, String time, String zone) {
+        return valueOf(date + "T" + time + "Z" + zone);
+    }
+
+    public long getTimeInMillis() {
+        return getValue().getTimeInMillis();
+    }
+
+    @Override
+    public String toString() {
+        return "[<TimeType> value=" + getValue().toString() + "]";
     }
 }

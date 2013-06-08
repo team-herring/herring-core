@@ -1,9 +1,6 @@
 package org.herring.core.manager.query.tests;
 
-import org.herring.core.manager.query.types.DateTimeType;
-import org.herring.core.manager.query.types.FieldType;
-import org.herring.core.manager.query.types.NumberType;
-import org.herring.core.manager.query.types.StringType;
+import org.herring.core.manager.query.types.*;
 import org.herring.core.protocol.codec.HerringCodec;
 import org.herring.core.protocol.codec.SerializableCodec;
 import org.junit.*;
@@ -47,10 +44,10 @@ public class SerializationTest {
 
     @Test
     public void dateTimeTypeTest() throws Exception {
-        DateTimeType dateTime = DateTimeType.valueOf("2009-05-23");
+        TimeType dateTime = TimeType.valueOf("2009-05-23");
 
         byte[] encoded = CODEC.encode(dateTime);
-        DateTimeType restored = (DateTimeType) CODEC.decode(encoded);
+        TimeType restored = (TimeType) CODEC.decode(encoded);
 
         Assert.assertEquals(dateTime, restored);
     }
@@ -63,5 +60,15 @@ public class SerializationTest {
         FieldType restored = (FieldType) CODEC.decode(encoded);
 
         Assert.assertEquals(field, restored);
+    }
+
+    @Test
+    public void timeRangeTypeTest() throws Exception {
+        TimeRangeType timeRange = new TimeRangeType(TimeType.valueOf("2013-05-20"), TimeType.valueOf("2013-05-30"));
+
+        byte[] encoded = CODEC.encode(timeRange);
+        TimeRangeType restored = (TimeRangeType) CODEC.decode(encoded);
+
+        Assert.assertEquals(timeRange, restored);
     }
 }
