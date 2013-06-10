@@ -4,7 +4,6 @@ import org.herring.core.protocol.ClientComponent;
 import org.herring.core.protocol.codec.HerringCodec;
 import org.herring.core.protocol.codec.SerializableCodec;
 import org.herring.core.protocol.handler.MessageHandler;
-import org.herring.core.protocol.handler.SyncMessageHandler;
 
 /**
  * << Description >>
@@ -13,28 +12,33 @@ import org.herring.core.protocol.handler.SyncMessageHandler;
  * Time: 오전 11:21
  */
 public class NetworkFileSystemClient {
-    private static final String host = "127.0.0.1";
-    private static final int port = 9300;
+    private String host;
+    private int port;
 
     private ClientComponent clientComponent;
+    private HerringCodec codec;
+    private MessageHandler messageHandler;
 
-    public static void main(String[] args) throws InterruptedException {
-        NetworkFileSystemClient nfsConnector = new NetworkFileSystemClient();
-        HerringCodec codec = new SerializableCodec();
+    public NetworkFileSystemClient(String host, int port){
+        this.host = host;
+        this.port = port;
 
-        MessageHandler messageHandler = new SyncMessageHandler();
-
-        System.out.println("Network File System에 연결합니다.");
-        nfsConnector.clientComponent = new ClientComponent(host,port,codec, messageHandler);
-
-        System.out.println("NFS에 메시지를 전송합니다.");
-        nfsConnector.clientComponent.getNetworkContext().sendObject("Hello NFS?!");
-        System.out.println("NFS의 응답을 기다립니다.");
-        nfsConnector.clientComponent.getNetworkContext().waitUntil("Recieved Message");
-
-        System.out.println("NFS에서 전송된 메시지");
-        System.out.println(nfsConnector.clientComponent.getNetworkContext().getMessageFromQueue());
-
-        nfsConnector.clientComponent.stop();
+        System.out.println("ClientComponent Initialize");
+        codec = new SerializableCodec();
+        messageHandler = new NetworkFileSystemMessageHandler();
+        clientComponent = new ClientComponent(this.host,this.port, codec,messageHandler);
     }
+
+    public void openConnection() throws Exception {
+        clientComponent.start();
+    }
+
+    public void closeConnection() throws Exception{
+        clientComponent.stop();
+    }
+
+    public void putData(String locate, String data){
+
+    }
+
 }
