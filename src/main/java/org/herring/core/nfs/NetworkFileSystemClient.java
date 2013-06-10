@@ -38,7 +38,13 @@ public class NetworkFileSystemClient {
     }
 
     public void putData(String locate, String data){
+        //Command에 맞게 NetworkFileSystemAPIHandler 작성
+        NetworkFileSystemAPIHandler apiHandler = new NetworkFileSystemAPIHandler();
+        apiHandler.makeCommand_putData_locate_data(locate,data);
 
+        //TODO: APIHandler를 Herring Codec으로 Encoding 하여 ClientComponent를 통해 Server로 전송해야 한다.
+        clientComponent.getNetworkContext().sendObject(apiHandler);
+        //TODO: 전송한 객체에 대한 서버에서의 처리 결과를 기다려야 한다.
     }
 
 }
