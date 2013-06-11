@@ -114,10 +114,9 @@ public class ZookeeperClientTest {
             }
 
             @Override
-            public boolean nodeDeleted(String path) {
+            public void nodeDeleted(String path) {
                 System.out.println("Node Deleted: " + path + ", atomic: " + level.incrementAndGet());
                 watchCheck.set(2, true);
-                return true;
             }
         });
     }

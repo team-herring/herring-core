@@ -16,7 +16,5 @@ public class ZookeeperWatchListener {
         return true;
     }
 
-    public boolean nodeDeleted(String path) {
-        return true;
-    }
+    public void nodeDeleted(String path) {}
 }

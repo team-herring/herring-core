@@ -286,7 +286,7 @@ public class ZookeeperClient {
 
                 switch (type) {
                     case NodeDeleted:
-                        flag = listener.nodeDeleted(path);
+                        listener.nodeDeleted(path);
                         break;
                     case NodeDataChanged:
                         flag = listener.nodeDataChanged(path);
