@@ -1,7 +1,7 @@
-package org.herring.core.zookeeper.tests;
+package org.herring.core.cluster.zookeeper.tests;
 
-import org.herring.core.zookeeper.ZookeeperClient;
-import org.herring.core.zookeeper.ZookeeperWatchListener;
+import org.herring.core.cluster.zookeeper.ZookeeperClient;
+import org.herring.core.cluster.zookeeper.ZookeeperWatchListener;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 

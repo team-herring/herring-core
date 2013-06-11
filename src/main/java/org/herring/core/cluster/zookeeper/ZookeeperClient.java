@@ -1,4 +1,4 @@
-package org.herring.core.zookeeper;
+package org.herring.core.cluster.zookeeper;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.client.ZooKeeperSaslClient;
@@ -6,6 +6,7 @@ import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 실제 Zookeeper 서버와 통신하는 클래스.
@@ -30,7 +31,35 @@ public class ZookeeperClient {
         System.setProperty("java.security.auth.login.config", jassConfiguration);
         System.setProperty(ZooKeeperSaslClient.LOGIN_CONTEXT_NAME_KEY, "Client");
 
-        zk = new ZooKeeper(uri, timeout, null);
+        // 연결 성립이 완전하게 이루어지는 것을 보장하기 위해 대기하는 부분
+        // TODO: 추후 다른 객체 또는 메서드로 코드 분리 검토 필요.
+        final CountDownLatch connectedLatch = new CountDownLatch(1);
+
+        Watcher watcher = new Watcher() {
+            @Override
+            public void process(WatchedEvent event) {
+                switch (event.getType()) {
+                    case None:
+                        switch (event.getState()) {
+                            case SyncConnected:
+                            case ConnectedReadOnly:
+                                connectedLatch.countDown();
+                                break;
+                            case Expired:
+                                // TODO: Session Expired에 대한 이벤트 트리거 내용 추가.
+                                break;
+                        }
+                }
+            }
+        };
+
+        // 연결 시도
+        zk = new ZooKeeper(uri, timeout, watcher);
+
+        // 대기
+        try {
+            connectedLatch.await();
+        } catch (InterruptedException ignored) {}
     }
 
     /**
@@ -38,7 +67,7 @@ public class ZookeeperClient {
      *
      * @param path         파일을 생성할 경로
      * @param data         파일에 포함시킬 데이터
-     * @param isPersistent 만약 true라면 세션의 연결 여부와 상관없이 데이터가 지속되며, false일 경우 EPHEMERAL 모드로 파일을 생성하여, 세션 종료시 파일이 삭제되도록 한다.
+     * @param isPersistent 세션의 연결 상태와 데이터 사이의 연관성 (만약 true라면 세션의 연결 여부와 상관없이 데이터가 지속되며, false일 경우 EPHEMERAL 모드로 파일을 생성하여, 세션 종료시 파일이 삭제되도록 한다.)
      */
     public void createFile(String path, String data, boolean isPersistent) throws KeeperException {
         try {
@@ -85,7 +114,7 @@ public class ZookeeperClient {
      * Zookeeper 서버로 부터 지정된 경로에 저장된 데이터를 읽어온다.
      *
      * @param path 데이터를 가져올 파일의 경로
-     * @return 파일의 데이터를 String 형태로 돌려준다.
+     * @return 지정된 경로에 저장된 데이터
      */
     public String get(String path) throws KeeperException {
         try {
@@ -133,7 +162,7 @@ public class ZookeeperClient {
      * 주어진 경로에 파일 또는 디렉토리가 존재하는지 확인한다.
      *
      * @param path 존재 여부를 확인할 경로
-     * @return 주어진 경로에 파일 또는 디렉토리가 존재한다면 true, 그렇지 않을 경우 false를 돌려준다.
+     * @return 주어진 경로에 파일 또는 디렉토리가 존재한다면 true, 그렇지 않을 경우 false
      */
     public boolean exists(String path) throws KeeperException {
         return exists(path, null);
@@ -144,7 +173,7 @@ public class ZookeeperClient {
      *
      * @param path    존재 여부를 확인할 경로
      * @param watcher 추후 이벤트를 통지 받을 내부 리스너 객체
-     * @return 주어진 경로에 파일 또는 디렉토리가 존재한다면 true, 그렇지 않을 경우 false를 돌려준다.
+     * @return 주어진 경로에 파일 또는 디렉토리가 존재한다면 true, 그렇지 않을 경우 false
      */
     public boolean exists(String path, final Watcher watcher) throws KeeperException {
         try {
@@ -190,7 +219,7 @@ public class ZookeeperClient {
      * 지정 경로에 위치한 자식 노드 리스트를 반환한다.
      *
      * @param path 자식 노드 리스트를 확인할 경로
-     * @return 주어진 경로 아래 존재하는 노드들의 path를 돌려준다.
+     * @return 주어진 경로 아래 존재하는 노드들의 경로 리스트
      */
     public List<String> getChildren(String path) throws KeeperException {
         return getChildren(path, null);
@@ -201,7 +230,7 @@ public class ZookeeperClient {
      *
      * @param path    자식 노드 리스트를 확인할 경로
      * @param watcher 추후 이벤트를 통지 받을 내부 리스너 객체
-     * @return 주어진 경로 아래 존재하는 노드들의 path를 돌려준다.
+     * @return 주어진 경로 아래 존재하는 노드들의 경로 리스트
      */
     public List<String> getChildren(String path, final Watcher watcher) throws KeeperException {
         try {
@@ -284,5 +313,14 @@ public class ZookeeperClient {
             exists(path, watcher);
             getChildren(path, watcher);
         } catch (KeeperException ignored) {}
+    }
+
+    /**
+     * 현재 Zookeeper 서버와 연결되어있는지 확인한다.
+     *
+     * @return Zookeeper 서버와 연결이 되어있으면 true, 아닐경우 false
+     */
+    public boolean isConnected() {
+        return zk.getState().isConnected();
     }
 }
