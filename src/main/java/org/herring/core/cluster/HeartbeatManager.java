@@ -1,8 +1,9 @@
 package org.herring.core.cluster;
 
+import org.apache.zookeeper.KeeperException;
 import org.herring.core.zookeeper.ZookeeperClient;
-import org.herring.core.zookeeper.ZookeeperException;
 
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -60,15 +61,11 @@ public class HeartbeatManager {
      * @param uuid              현재 클러스터의 UUID
      * @param type              현재 클러스터의 종류
      */
-    public void startHeartbeat(String uri, int timeout, String jassConfiguration, UUID uuid, String type) {
+    public void startHeartbeat(String uri, int timeout, String jassConfiguration, UUID uuid, String type) throws IOException {
         if (zkClient != null)
             throw new IllegalStateException("Zookeeper를 통한 Heartbeat가 이미 작동중 입니다.");
 
-        try {
-            zkClient = new ZookeeperClient(uri, timeout, jassConfiguration);
-        } catch (ZookeeperException e) {
-            throw new RuntimeException("Zookeeper 연결에 실패했습니다. " + e.getMessage());
-        }
+        zkClient = new ZookeeperClient(uri, timeout, jassConfiguration);
 
         this.uuid = uuid;
         this.type = type;
@@ -84,13 +81,9 @@ public class HeartbeatManager {
 
         ZookeeperClient zkClient = getZookeeperClient();
 
-        try {
-            zkClient.close();
-        } catch (ZookeeperException e) {
-            e.printStackTrace();
-        } finally {
-            this.zkClient = null;
-        }
+        zkClient.close();
+
+        this.zkClient = null;
     }
 
     /**
@@ -112,7 +105,9 @@ public class HeartbeatManager {
             deleteHeartbeatFile();
 
             zkClient.createFile(heartbeatPath, type, false);
-        } catch (ZookeeperException e) {
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Heartbeat File 생성에 실패했습니다. " + e.getMessage());
+        } catch (KeeperException e) {
             throw new RuntimeException("Heartbeat File 생성에 실패했습니다. " + e.getMessage());
         }
     }
@@ -125,7 +120,9 @@ public class HeartbeatManager {
         try {
             if (zkClient.exists(heartbeatPath))
                 zkClient.delete(heartbeatPath);
-        } catch (ZookeeperException e) {
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Heartbeat File 제거에 실패했습니다. " + e.getMessage());
+        } catch (KeeperException e) {
             throw new RuntimeException("Heartbeat File 제거에 실패했습니다. " + e.getMessage());
         }
     }
@@ -144,8 +141,10 @@ public class HeartbeatManager {
         try {
             if (zkClient.exists(heartbeatPath))
                 return true;
-        } catch (ZookeeperException e) {
-            return false;
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Heartbeat File 확인에 실패했습니다. " + e.getMessage());
+        } catch (KeeperException e) {
+            throw new RuntimeException("Heartbeat File 확인에 실패했습니다. " + e.getMessage());
         }
 
         return false;
@@ -166,8 +165,10 @@ public class HeartbeatManager {
 
         try {
             return zkClient.get(heartbeatPath);
-        } catch (ZookeeperException e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Heartbeat Type 확인에 실패했습니다. " + e.getMessage());
+        } catch (KeeperException e) {
+            throw new RuntimeException("Heartbeat Type 확인에 실패했습니다. " + e.getMessage());
         }
     }
 }
