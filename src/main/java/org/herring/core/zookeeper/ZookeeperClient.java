@@ -1,9 +1,6 @@
 package org.herring.core.zookeeper;
 
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.ZooDefs;
-import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.*;
 import org.apache.zookeeper.client.ZooKeeperSaslClient;
 import org.apache.zookeeper.data.Stat;
 
@@ -158,11 +155,23 @@ public class ZookeeperClient {
      * @throws ZookeeperException
      */
     public boolean exists(String path) throws ZookeeperException {
+        return exists(path, null);
+    }
+
+    /**
+     * 주어진 경로에 파일 또는 디렉토리가 존재하는지 확인한다.
+     *
+     * @param path    존재 여부를 확인할 경로
+     * @param watcher 추후 이벤트를 통지 받을 내부 리스너 객체
+     * @return 주어진 경로에 파일 또는 디렉토리가 존재한다면 true, 그렇지 않을 경우 false를 돌려준다.
+     * @throws ZookeeperException
+     */
+    public boolean exists(String path, final Watcher watcher) throws ZookeeperException {
         try {
-            return zk.exists(path, false) != null;
-        } catch (KeeperException e) {
-            throw new ZookeeperException(e.getMessage());
+            return zk.exists(path, watcher) != null;
         } catch (InterruptedException e) {
+            throw new ZookeeperException(e.getMessage());
+        } catch (KeeperException e) {
             throw new ZookeeperException(e.getMessage());
         }
     }
@@ -208,8 +217,20 @@ public class ZookeeperClient {
      * @throws ZookeeperException
      */
     public List<String> getChildren(String path) throws ZookeeperException {
+        return getChildren(path, null);
+    }
+
+    /**
+     * 지정 경로에 위치한 자식 노드 리스트를 반환한다.
+     *
+     * @param path    자식 노드 리스트를 확인할 경로
+     * @param watcher 추후 이벤트를 통지 받을 내부 리스너 객체
+     * @return 주어진 경로 아래 존재하는 노드들의 path를 돌려준다.
+     * @throws ZookeeperException
+     */
+    public List<String> getChildren(String path, final Watcher watcher) throws ZookeeperException {
         try {
-            return zk.getChildren(path, false);
+            return zk.getChildren(path, watcher);
         } catch (KeeperException e) {
             throw new ZookeeperException(e.getMessage());
         } catch (InterruptedException e) {
@@ -247,5 +268,52 @@ public class ZookeeperClient {
         try {
             close();
         } catch (ZookeeperException e) {}
+    }
+
+    /**
+     * 지정된 노드에 감시를 위한 Event Listener를 등록한다. 지정할 노드는 반드시 존재해야한다.
+     *
+     * @param path     감시를 할 노드의 경로
+     * @param listener 감시 결과를 통보 받을 Event Listener
+     */
+    public void addEventListener(final String path, final ZookeeperWatchListener listener) {
+        Watcher watcher = new Watcher() {
+            @Override
+            public void process(WatchedEvent event) {
+                String path = event.getPath();
+                boolean flag = false;
+                Event.EventType type = event.getType();
+
+                switch (type) {
+                    case NodeDeleted:
+                        flag = listener.nodeDeleted(path);
+                        break;
+                    case NodeDataChanged:
+                        flag = listener.nodeDataChanged(path);
+                        break;
+                    case NodeChildrenChanged:
+                        flag = listener.childrenNodeChanged(path);
+                        break;
+                }
+
+                if (flag) {
+                    try {
+                        exists(path, this);
+                        getChildren(path, this);
+                    } catch (ZookeeperException ignored) {}
+                }
+            }
+        };
+
+        try {
+            if (!exists(path))
+                // TODO: Exception 처리
+                return;
+
+            exists(path, watcher);
+            getChildren(path, watcher);
+        } catch (ZookeeperException e) {
+            e.printStackTrace();
+        }
     }
 }
