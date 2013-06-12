@@ -123,8 +123,8 @@ public class ClusterSharedStorage {
 
             List<String> children = zkClient.getChildren(path);
             for (String child : children) {
-                String key = getKey(path);
-                String value = zkClient.get(child);
+                String key = child;
+                String value = zkClient.get(path + "/" + child);
 
                 storageMap.put(key, value);
             }
