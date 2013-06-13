@@ -44,6 +44,9 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
         NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
         if (context.isAvailableLatch("inactive"))
             context.getLatch("inactive").countDown();
+        // inactive시 received 이벤트의 발생이 불가능 하므로 그냥 received 이벤트 종료
+        if (context.isAvailableLatch("received"))
+            context.getLatch("received").countDown();
 
         if (handler != null)
             handler.channelInactive(context);
