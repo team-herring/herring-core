@@ -5,6 +5,8 @@ import org.herring.core.protocol.codec.HerringCodec;
 import org.herring.core.protocol.codec.SerializableCodec;
 import org.herring.core.protocol.handler.MessageHandler;
 import org.herring.core.protocol.handler.SyncMessageHandler;
+import org.herring.nfs.command.PutDataWithLocateAndData;
+import org.herring.nfs.response.Response;
 
 import java.util.List;
 
@@ -51,11 +53,18 @@ public class NetworkFileSystemClient {
      * @param data 데이터
      * @throws InterruptedException
      */
-    public void putData(String locate, String data) throws InterruptedException {
+    public boolean putData(String locate, String data) throws InterruptedException {
         if(!clientComponent.isActive()){
             System.out.println("NetworkFileSystemClient가 실행중이지 않습니다.");
-            return;
+            return false;
         }
+        PutDataWithLocateAndData command = new PutDataWithLocateAndData(locate,data);
+        clientComponent.getNetworkContext().sendObject(command);
+        clientComponent.getNetworkContext().waitUntil("received");
+        Response response = (Response) clientComponent.getNetworkContext().getMessageFromQueue();
+        boolean result = (Boolean)response.getResponse();
+        return result;
+        /*
         //Command에 맞게 NetworkFileSystemAPIHandler 작성
         NetworkFileSystemAPIHandler apiHandler = new NetworkFileSystemAPIHandler();
         apiHandler.makeCommand_putData_locate_data(locate, data);
@@ -65,7 +74,9 @@ public class NetworkFileSystemClient {
         //전송한 객체에 대한 서버에서의 처리 결과를 기다려야 한다.
         clientComponent.getNetworkContext().waitUntil("received");
         //서버에서 처리된 결과를 Queue에서 꺼내온다.
-        System.out.println("Processed on NFS : "+clientComponent.getNetworkContext().getMessageFromQueue());
+        */
+
+//        System.out.println("Processed on NFS : "+clientComponent.getNetworkContext().getMessageFromQueue());
     }
 
     /**

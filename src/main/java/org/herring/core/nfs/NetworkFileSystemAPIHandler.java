@@ -13,6 +13,7 @@ import java.util.List;
  * Date: 13. 6. 10.
  * Time: 오후 1:35
  */
+@Deprecated
 public class NetworkFileSystemAPIHandler {
     private APIs command;
     private String locate;
