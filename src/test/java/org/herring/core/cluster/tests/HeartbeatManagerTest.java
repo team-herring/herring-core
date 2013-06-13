@@ -1,6 +1,7 @@
 package org.herring.core.cluster.tests;
 
 import org.herring.core.cluster.HeartbeatManager;
+import org.herring.core.cluster.zookeeper.ZookeeperClient;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
@@ -8,52 +9,50 @@ import java.util.Properties;
 import java.util.UUID;
 
 /**
+ * HeartbeatManager 클래스 테스트 케이스.
+ *
  * @author Chiwan Park
  * @since 0.1
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class HeartbeatManagerTest {
 
-    private static String uri;
-    private static int timeout;
-    private static UUID uuid;
-    private static String jassConfiguration;
+    private static HeartbeatManager MANAGER;
+    private static ZookeeperClient ZK_CLIENT;
+    private static String TYPE = "sample-cluster";
+    private static UUID CLUSTER_UUID;
 
     @BeforeClass
     public static void setup() throws Exception {
         Properties properties = new Properties();
         properties.load(ClassLoader.getSystemResourceAsStream("zookeeper.properties"));
 
-        uri = properties.getProperty("zookeeper.server-uri");
-        timeout = Integer.valueOf(properties.getProperty("zookeeper.timeout"));
-        uuid = UUID.randomUUID();
-        jassConfiguration = ClassLoader.getSystemResource("jass.conf").toString();
+        String uri = properties.getProperty("zookeeper.server-uri");
+        int timeout = Integer.valueOf(properties.getProperty("zookeeper.timeout"));
+        CLUSTER_UUID = UUID.randomUUID();
+        String jassConfiguration = ClassLoader.getSystemResource("jass.conf").toString();
+
+        ZK_CLIENT = new ZookeeperClient(uri, timeout, jassConfiguration);
+        MANAGER = new HeartbeatManager(ZK_CLIENT, CLUSTER_UUID, TYPE);
     }
 
     @AfterClass
     public static void cleanup() throws Exception {
-        HeartbeatManager heartbeatManager = HeartbeatManager.getInstance();
-
-        heartbeatManager.stopHeartbeat();
+        MANAGER.stopHeartbeat();
     }
 
     @Test
     public void test0startHeartbeat() throws Exception {
-        HeartbeatManager heartbeatManager = HeartbeatManager.getInstance();
-        heartbeatManager.startHeartbeat(uri, timeout, jassConfiguration, uuid, "sample");
+        MANAGER.startHeartbeat();
     }
 
     @Test
     public void test1checkHeartbeatFile() throws Exception {
-        HeartbeatManager heartbeatManager = HeartbeatManager.getInstance();
-
-        Assert.assertTrue(heartbeatManager.isValidCluster(uuid));
+        Assert.assertTrue(MANAGER.isValidCluster(CLUSTER_UUID));
     }
 
     @Test
     public void test2checkHeartbeatType() throws Exception {
-        HeartbeatManager heartbeatManager = HeartbeatManager.getInstance();
-
-        Assert.assertEquals(heartbeatManager.getClusterType(uuid), "sample");
+        Assert.assertEquals(MANAGER.getClusterType(CLUSTER_UUID), TYPE);
     }
 }
