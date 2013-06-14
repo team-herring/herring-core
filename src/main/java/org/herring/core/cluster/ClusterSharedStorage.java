@@ -65,7 +65,7 @@ public class ClusterSharedStorage {
                 if (zkClient.exists(path))
                     zkClient.update(path, value);
                 else {
-                    zkClient.createFile(path, value, false);
+                    zkClient.createFile(path, value, true);
                     zkClient.addEventListener(path, UPDATE_LISTENER);
                 }
 
