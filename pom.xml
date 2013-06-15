@@ -64,7 +64,7 @@
     <!-- ==================== -->
     <repositories>
         <repository>
-            <id>central</id>
+            <id>maven.chiwanpark.com</id>
             <url>http://maven.chiwanpark.com/content/groups/public</url>
         </repository>
     </repositories>
