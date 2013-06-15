@@ -16,6 +16,7 @@
         <log4j.version>1.2.17</log4j.version>
         <netty.version>4.0.0.CR3</netty.version>
         <maven.surefire.version>2.14.1</maven.surefire.version>
+        <herring.nfs.version>0.1-SNAPSHOT</herring.nfs.version>
     </properties>
 
 
@@ -55,6 +56,15 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty.version}</version>
+        </dependency>
+
+        <!-- ==================== -->
+        <!-- =====Herring NFS==== -->
+        <!-- ==================== -->
+        <dependency>
+            <groupId>org.herring</groupId>
+            <artifactId>herring-nfs</artifactId>
+            <version>${herring.nfs.version}</version>
         </dependency>
 
     </dependencies>
@@ -128,7 +138,7 @@
                         <version>${maven.surefire.version}</version>
                         <configuration>
                             <excludes>
-                                <exclude>/org/herring/core/zookeeper/tests/*.java</exclude>
+                                <exclude>/org/herring/core/cluster/zookeeper/tests/*.java</exclude>
                                 <exclude>/org/herring/core/cluster/tests/*.java</exclude>
                             </excludes>
                         </configuration>
