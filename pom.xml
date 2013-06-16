@@ -58,15 +58,6 @@
             <version>${netty.version}</version>
         </dependency>
 
-        <!-- ==================== -->
-        <!-- =====Herring NFS==== -->
-        <!-- ==================== -->
-        <dependency>
-            <groupId>org.herring</groupId>
-            <artifactId>herring-nfs</artifactId>
-            <version>${herring.nfs.version}</version>
-        </dependency>
-
     </dependencies>
 
     <!-- ==================== -->
