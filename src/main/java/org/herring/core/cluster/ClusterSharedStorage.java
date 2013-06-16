@@ -4,14 +4,11 @@ import org.apache.zookeeper.KeeperException;
 import org.herring.core.cluster.zookeeper.ZookeeperClient;
 import org.herring.core.cluster.zookeeper.ZookeeperWatchListener;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
- * 다수의 클러스터가 공통으로 저장하고 정보를 공유하는 목적으로 설계된 클래스다. (또는 저장할 정보가 작은 경우에도 활용할 수 있다.)
- * 모든 클러스터에서 생성된 ClusterSharedStorage 객체는 반드시 서로 동등한 자료를 보유하고 있음을 보장한다.
+ * 다수의 클러스터가 공통으로 저장하고 정보를 공유하는 목적으로 설계된 클래스다. (또는 저장할 정보가 작은 경우에도 활용할 수 있다.) 모든 클러스터에서 생성된 ClusterSharedStorage 객체는 반드시
+ * 서로 동등한 자료를 보유하고 있음을 보장한다.
  *
  * @author Chiwan Park
  * @since 0.1
@@ -82,6 +79,18 @@ public class ClusterSharedStorage {
         }
     }
 
+    public List<String> getKeyList() {
+        List<String> keyList = new ArrayList<String>();
+
+        synchronized (lockObject) {
+            Set<String> keySet = storageMap.keySet();
+
+            keyList.addAll(keySet);
+        }
+
+        return keyList;
+    }
+
     public void remove(String key) {
         ZookeeperClient zkClient = getZookeeperClient();
         String path = getPath(key);
@@ -143,7 +152,8 @@ public class ClusterSharedStorage {
                     String value = zkClient.get(path);
 
                     storageMap.put(key, value);
-                } catch (KeeperException ignored) {}
+                } catch (KeeperException ignored) {
+                }
             }
 
             return true;
