@@ -22,7 +22,7 @@ public class ClusterSharedStorage {
 
     private Map<String, String> storageMap;
     private final Object lockObject;
-    private final StorageUpdateListener UPDATE_LISTENER;
+    private final StorageUpdateListener updateListener;
 
     public ClusterSharedStorage(ZookeeperClient zkClient) {
         this(zkClient, UUID.randomUUID());
@@ -35,7 +35,7 @@ public class ClusterSharedStorage {
         lockObject = new Object();
         storageMap = new HashMap<String, String>();
 
-        UPDATE_LISTENER = new StorageUpdateListener();
+        updateListener = new StorageUpdateListener();
 
         initializeStorage();
     }
@@ -63,7 +63,7 @@ public class ClusterSharedStorage {
                     zkClient.update(path, value);
                 else {
                     zkClient.createFile(path, value, true);
-                    zkClient.addEventListener(path, UPDATE_LISTENER);
+                    zkClient.addEventListener(path, updateListener);
                 }
 
                 storageMap.put(key, value);
@@ -130,11 +130,16 @@ public class ClusterSharedStorage {
             if (!zkClient.exists(path))
                 zkClient.createDirectory(path);
 
+            // add default event listener
+            zkClient.addEventListener(path, updateListener);
+
             List<String> children = zkClient.getChildren(path);
             for (String child : children) {
                 String key = child;
                 String value = zkClient.get(path + "/" + child);
 
+                // add default event listener
+                zkClient.addEventListener(path + "/" + child, updateListener);
                 storageMap.put(key, value);
             }
         } catch (KeeperException e) {
@@ -156,6 +161,34 @@ public class ClusterSharedStorage {
                 }
             }
 
+            return true;
+        }
+
+        @Override
+        public boolean childrenNodeChanged(String path) {
+            synchronized (lockObject) {
+                try {
+                    List<String> children = zkClient.getChildren(path);
+
+                    // 기존 키 업데이트
+                    for (String key : storageMap.keySet()) {
+                        if (children.contains(key)) {
+                            String value = zkClient.get(path + '/' + key);
+                            storageMap.put(key, value);
+                        } else
+                            storageMap.remove(key);
+                    }
+
+                    // 새로운 키 추가하기
+                    for (String child : children) {
+                        if (!storageMap.containsKey(child)) {
+                            String value = zkClient.get(path + '/' + child);
+                            storageMap.put(child, value);
+                        }
+                    }
+                } catch (KeeperException ignored) {
+                }
+            }
             return true;
         }
     }
