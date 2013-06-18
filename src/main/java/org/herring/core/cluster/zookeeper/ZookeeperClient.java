@@ -59,7 +59,8 @@ public class ZookeeperClient {
         // 대기
         try {
             connectedLatch.await();
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     /**
@@ -67,7 +68,8 @@ public class ZookeeperClient {
      *
      * @param path         파일을 생성할 경로
      * @param data         파일에 포함시킬 데이터
-     * @param isPersistent 세션의 연결 상태와 데이터 사이의 연관성 (만약 true라면 세션의 연결 여부와 상관없이 데이터가 지속되며, false일 경우 EPHEMERAL 모드로 파일을 생성하여, 세션 종료시 파일이 삭제되도록 한다.)
+     * @param isPersistent 세션의 연결 상태와 데이터 사이의 연관성 (만약 true라면 세션의 연결 여부와 상관없이 데이터가 지속되며, false일 경우 EPHEMERAL 모드로 파일을
+     *                     생성하여, 세션 종료시 파일이 삭제되도록 한다.)
      */
     public void createFile(String path, String data, boolean isPersistent) throws KeeperException {
         try {
@@ -139,6 +141,16 @@ public class ZookeeperClient {
             zk.delete(path, -1);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        } catch (KeeperException e) {
+            if (e.code() == KeeperException.Code.NOTEMPTY) {
+                List<String> children = getChildren(path);
+
+                for (String child : children)
+                    delete(path + '/' + child);
+
+                delete(path);
+            } else
+                throw e;
         }
     }
 
@@ -300,7 +312,8 @@ public class ZookeeperClient {
                     try {
                         exists(path, this);
                         getChildren(path, this);
-                    } catch (KeeperException ignored) {}
+                    } catch (KeeperException ignored) {
+                    }
                 }
             }
         };
@@ -312,7 +325,8 @@ public class ZookeeperClient {
 
             exists(path, watcher);
             getChildren(path, watcher);
-        } catch (KeeperException ignored) {}
+        } catch (KeeperException ignored) {
+        }
     }
 
     /**

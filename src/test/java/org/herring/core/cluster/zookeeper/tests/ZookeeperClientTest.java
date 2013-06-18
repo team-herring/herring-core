@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ZookeeperClientTest {
+
     private static ZookeeperClient zkClient;
     private static Properties properties;
     private static List<Boolean> watchCheck;
@@ -155,4 +156,14 @@ public class ZookeeperClientTest {
             Assert.assertTrue(value);
         }
     }
+
+    @Test
+    public void testRemoveChain() throws Exception {
+        zkClient.createDirectory("/herring-zkClient-test-chain");
+        zkClient.createDirectory("/herring-zkClient-test-chain/test");
+        zkClient.createDirectory("/herring-zkClient-test-chain/test/sample");
+
+        zkClient.delete("/herring-zkClient-test-chain");
+    }
+
 }
