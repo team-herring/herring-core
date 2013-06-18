@@ -27,9 +27,14 @@ public class CruiserManagerMessageCodec implements HerringCodec {
         List<Map<String, String>> rows = message.getData();
 
         // output uuid
-        long most = uuid.getMostSignificantBits();
-        long least = uuid.getLeastSignificantBits();
-
+        long most, least;
+        try {
+            most = uuid.getMostSignificantBits();
+            least = uuid.getLeastSignificantBits();
+        } catch (Exception e) {
+            most = 0;
+            least = 0;
+        }
         ByteBuffer uuidBuffer = ByteBuffer.allocate(16);
         uuidBuffer.putLong(most);
         uuidBuffer.putLong(least);
@@ -37,22 +42,28 @@ public class CruiserManagerMessageCodec implements HerringCodec {
         output.write(UUID_FINISH);
 
         // output type
-        output.write(message.getType().getValue());
+        if (message.getType() != null)
+            output.write(message.getType().getValue());
+        else
+            output.write(1);
 
         // output rows
-        for (Map<String, String> row : rows) {
-            for (String column : row.keySet()) {
-                String data = row.get(column);
+        try {
+            for (Map<String, String> row : rows) {
+                for (String column : row.keySet()) {
+                    String data = row.get(column);
 
-                // output column
-                output.write(column.getBytes("utf-8"));
-                output.write(COLUMN_FINISH);
+                    // output column
+                    output.write(column.getBytes("utf-8"));
+                    output.write(COLUMN_FINISH);
 
-                // output data
-                output.write(data.getBytes("utf-8"));
-                output.write(DATA_FINISH);
+                    // output data
+                    output.write(data.getBytes("utf-8"));
+                    output.write(DATA_FINISH);
+                }
+                output.write(ROW_FINISH);
             }
-            output.write(ROW_FINISH);
+        } catch (Exception ignored) {
         }
 
         return output.toByteArray();

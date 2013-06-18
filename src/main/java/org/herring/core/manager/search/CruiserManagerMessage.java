@@ -1,5 +1,6 @@
 package org.herring.core.manager.search;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,8 +45,16 @@ public class CruiserManagerMessage {
     }
 
     public CruiserManagerMessage(UUID uuid, Type type, List<Map<String, String>> data) {
+        if (uuid == null)
+            uuid = UUID.nameUUIDFromBytes(new byte[16]);
         this.uuid = uuid;
+
+        if (type == null)
+            type = Type.SEARCH_START;
         this.type = type;
+
+        if (data == null)
+            data = new ArrayList<Map<String, String>>();
         this.data = data;
     }
 

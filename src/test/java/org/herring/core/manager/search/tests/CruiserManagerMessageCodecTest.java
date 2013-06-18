@@ -17,6 +17,21 @@ import java.util.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CruiserManagerMessageCodecTest {
 
+    private Map<String, String> getSampleData() {
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("@id", "1234");
+        data.put("@col1", "hello");
+        data.put("@col2", "bye");
+
+        return data;
+    }
+
+    private void AssertEquals(CruiserManagerMessage expected, CruiserManagerMessage actual) {
+        Assert.assertEquals(expected.getData(), actual.getData());
+        Assert.assertEquals(expected.getType(), actual.getType());
+        Assert.assertEquals(expected.getUUID(), actual.getUUID());
+    }
+
     @Test
     public void testCodecTest() throws Exception {
         HerringCodec codec = new CruiserManagerMessageCodec();
@@ -24,18 +39,8 @@ public class CruiserManagerMessageCodecTest {
         UUID uuid = UUID.randomUUID();
         List<Map<String, String>> rows = new LinkedList<Map<String, String>>();
 
-        Map<String, String> data1 = new HashMap<String, String>();
-        data1.put("@id", "1234");
-        data1.put("@col1", "hello");
-        data1.put("@col2", "bye");
-
-        Map<String, String> data2 = new HashMap<String, String>();
-        data2.put("@id", "1235");
-        data2.put("@col1", "tired");
-        data2.put("@col2", "hot6");
-
-        rows.add(data1);
-        rows.add(data2);
+        rows.add(getSampleData());
+        rows.add(getSampleData());
 
         CruiserManagerMessage message = new CruiserManagerMessage(uuid, CruiserManagerMessage.Type.SEARCH_RESULT, rows);
         byte[] encoded = codec.encode(message);
@@ -44,9 +49,35 @@ public class CruiserManagerMessageCodecTest {
 
         CruiserManagerMessage decoded = (CruiserManagerMessage) codec.decode(encoded);
 
-        Assert.assertEquals(message.getData(), decoded.getData());
-        Assert.assertEquals(message.getType(), decoded.getType());
-        Assert.assertEquals(message.getUUID(), decoded.getUUID());
+        AssertEquals(message, decoded);
+    }
+
+    @Test
+    public void testCodecWithUUIDNullData() throws Exception {
+        HerringCodec codec = new CruiserManagerMessageCodec();
+
+        List<Map<String, String>> rows = new LinkedList<Map<String, String>>();
+
+        rows.add(getSampleData());
+
+        CruiserManagerMessage message = new CruiserManagerMessage(null, CruiserManagerMessage.Type.SEARCH_RESULT, rows);
+        byte[] encoded = codec.encode(message);
+
+        CruiserManagerMessage decoded = (CruiserManagerMessage) codec.decode(encoded);
+
+        AssertEquals(message, decoded);
+    }
+
+    @Test
+    public void testCodecWithNullData() throws Exception {
+        HerringCodec codec = new CruiserManagerMessageCodec();
+
+        CruiserManagerMessage message = new CruiserManagerMessage(null, null, null);
+        byte[] encoded = codec.encode(message);
+
+        CruiserManagerMessage decoded = (CruiserManagerMessage) codec.decode(encoded);
+
+        AssertEquals(message, decoded);
     }
 
 }
