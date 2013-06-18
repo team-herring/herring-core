@@ -36,6 +36,9 @@ public class CruiserManagerMessageCodec implements HerringCodec {
         output.write(uuidBuffer.array());
         output.write(UUID_FINISH);
 
+        // output type
+        output.write(message.getType().getValue());
+
         // output rows
         for (Map<String, String> row : rows) {
             for (String column : row.keySet()) {
@@ -65,9 +68,13 @@ public class CruiserManagerMessageCodec implements HerringCodec {
         long most = uuidBuffer.getLong();
         long least = uuidBuffer.getLong();
         UUID uuid = new UUID(most, least);
+        input.skip(17);
+
+        // type detection
+        byte b = (byte) input.read();
+        CruiserManagerMessage.Type type = CruiserManagerMessage.Type.valueOf(b);
 
         // result detection
-        input.skip(17);
         while (input.available() > 0) {
             Map<String, String> row = new HashMap<String, String>();
 
@@ -86,7 +93,7 @@ public class CruiserManagerMessageCodec implements HerringCodec {
             rows.add(row);
         }
 
-        return new CruiserManagerMessage(uuid, rows);
+        return new CruiserManagerMessage(uuid, type, rows);
     }
 
     private byte[] readByteBundle(ByteArrayInputStream input) {

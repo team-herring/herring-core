@@ -37,7 +37,7 @@ public class CruiserManagerMessageCodecTest {
         rows.add(data1);
         rows.add(data2);
 
-        CruiserManagerMessage message = new CruiserManagerMessage(uuid, rows);
+        CruiserManagerMessage message = new CruiserManagerMessage(uuid, CruiserManagerMessage.Type.SEARCH_RESULT, rows);
         byte[] encoded = codec.encode(message);
 
         System.out.println(encoded.length);
@@ -45,6 +45,7 @@ public class CruiserManagerMessageCodecTest {
         CruiserManagerMessage decoded = (CruiserManagerMessage) codec.decode(encoded);
 
         Assert.assertEquals(message.getData(), decoded.getData());
+        Assert.assertEquals(message.getType(), decoded.getType());
         Assert.assertEquals(message.getUUID(), decoded.getUUID());
     }
 
