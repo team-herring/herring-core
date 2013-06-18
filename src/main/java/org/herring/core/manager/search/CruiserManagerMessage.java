@@ -15,7 +15,7 @@ public class CruiserManagerMessage {
     private Type type;
 
     public enum Type {
-        SEARCH_END((byte) 1), SEARCH_RESULT((byte) 2), ERROR((byte) 3);
+        SEARCH_END((byte) 1), SEARCH_RESULT((byte) 2), ERROR((byte) 3), SEARCH_START((byte) 4);
 
         private byte value;
 
@@ -35,6 +35,8 @@ public class CruiserManagerMessage {
                     return SEARCH_RESULT;
                 case 3:
                     return ERROR;
+                case 4:
+                    return SEARCH_START;
             }
 
             return null;
