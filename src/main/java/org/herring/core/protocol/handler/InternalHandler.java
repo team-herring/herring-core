@@ -30,11 +30,12 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
         logger.log(Level.INFO, "Channel Active");
 
         NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
-        if (context.isAvailableLatch("active"))
-            context.getLatch("active").countDown();
 
         if (handler != null)
             handler.channelActive(context);
+
+        if (context.isAvailableLatch("active"))
+            context.getLatch("active").countDown();
     }
 
     @Override
@@ -42,18 +43,20 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
         logger.log(Level.INFO, "Channel Inactive");
 
         NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
+
+        if (handler != null)
+            handler.channelInactive(context);
+
         if (context.isAvailableLatch("inactive"))
             context.getLatch("inactive").countDown();
         // inactive시 received 이벤트의 발생이 불가능 하므로 그냥 received 이벤트 종료
         if (context.isAvailableLatch("received"))
             context.getLatch("received").countDown();
-
-        if (handler != null)
-            handler.channelInactive(context);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        super.exceptionCaught(ctx, cause);
         logger.log(Level.WARNING, "Exception Caught: " + cause.getMessage());
 
         cause.printStackTrace();
@@ -64,12 +67,13 @@ public class InternalHandler extends ChannelInboundMessageHandlerAdapter<Object>
         logger.log(Level.INFO, "Message Received");
 
         NetworkContext context = CONTEXT_FACTORY.getContext(ctx.channel());
-        if (context.isAvailableLatch("received"))
-            context.getLatch("received").countDown();
 
         if (handler != null) {
             if (!handler.messageArrived(context, msg))
                 context.addMessageToQueue(msg);
         }
+
+        if (context.isAvailableLatch("received"))
+            context.getLatch("received").countDown();
     }
 }
