@@ -1,5 +1,7 @@
 package org.herring.core.cruiser.model;
 
+import org.herring.core.protocol.codec.CruiserAgentConnectionCodec;
+
 import java.util.Arrays;
 
 /**
