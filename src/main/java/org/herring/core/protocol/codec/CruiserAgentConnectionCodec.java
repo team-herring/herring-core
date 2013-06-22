@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: hyunje Date: 13. 5. 28. Time: 오전 8:53
+ * Cruiser와 Agent가 통신하는데에 사용하는 Codec
+ * User: hyunje
  */
 public class CruiserAgentConnectionCodec implements HerringCodec {
     @Override
