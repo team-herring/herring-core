@@ -1,15 +1,13 @@
 package org.herring.core.protocol.codec;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.herring.core.protocol.codec.HerringCodec;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * User: hyunje
- * Date: 13. 5. 28.
- * Time: 오전 8:53
+ * User: hyunje Date: 13. 5. 28. Time: 오전 8:53
  */
 public class CruiserAgentConnectionCodec implements HerringCodec {
     @Override
@@ -17,8 +15,7 @@ public class CruiserAgentConnectionCodec implements HerringCodec {
         if (o == null) throw new Exception();
 
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsBytes(o);
-
+        return mapper.writeValueAsString(o).getBytes("utf-8");
     }
 
     @Override
@@ -26,10 +23,9 @@ public class CruiserAgentConnectionCodec implements HerringCodec {
     public Object decode(byte[] bytes) throws Exception {
         List<Map<String, String>> dataList = null;
         ObjectMapper mapper = new ObjectMapper();
+        String data = new String(bytes, "utf-8");
 
-        String jsonified = mapper.writeValueAsString(dataList);
-
-        dataList = mapper.readValue(jsonified, List.class);
+        dataList = mapper.readValue(data, ArrayList.class);
 
         return dataList;
     }
